@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -56,7 +57,7 @@
       <div class="hero-content reveal">
         <span class="eyebrow eyebrow-light">Menuiserie &amp; climatisation · Marseille et alentours</span>
         <h1 class="hero-title">Vos fenêtres, volets et clim, posés avec un vrai souci du <em>détail</em>.</h1>
-        <p class="hero-sub">M13 Menuiseries accompagne les particuliers de Marseille dans le remplacement de leurs fenêtres, volets roulants, stores et l'installation de leur climatisation. Travail soigné, conseil honnête, devis gratuit sous 48&nbsp;h.</p>
+        <p class="hero-sub">Menuiseries et climatisation posées avec un vrai savoir-faire, pour les particuliers comme les professionnels. Devis gratuit sous 48&nbsp;h.</p>
         <div class="hero-actions">
           <a href="#contact" class="btn btn-primary btn-lg">Demander mon devis gratuit <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
           <a href="tel:+33612345678" class="btn btn-ghost-light btn-lg"><i class="fa-solid fa-phone" aria-hidden="true"></i> 06 12 34 56 78</a>
@@ -68,19 +69,35 @@
         </ul>
       </div>
 
-      <aside class="hero-card reveal" aria-label="Avis clients">
-        <div class="hero-card-rating">
-          <div class="stars" aria-hidden="true">
-            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-          </div>
-          <strong>4,9/5</strong>
+      <div class="hero-reviews reveal" aria-label="Avis clients">
+        <div class="hr-viewport" id="hrViewport">
+          <article class="hr-slide">
+            <div class="hr-photo"><img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=600&q=80" alt="Fenêtres posées à Marseille" loading="lazy" /></div>
+            <div class="hr-body">
+              <div class="hr-top"><div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><strong>4,9/5</strong></div>
+              <p class="hr-quote">« Deux fenêtres changées en une matinée, travail nickel et très bon conseil. »</p>
+              <div class="hr-author"><span class="avatar">S</span><span>Sophie M.<small>Marseille 8<sup>e</sup></small></span></div>
+            </div>
+          </article>
+          <article class="hr-slide">
+            <div class="hr-photo"><img src="https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?auto=format&fit=crop&w=600&q=80" alt="Climatisation installée à Gémenos" loading="lazy" /></div>
+            <div class="hr-body">
+              <div class="hr-top"><div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><strong>4,9/5</strong></div>
+              <p class="hr-quote">« José a posé ma clim nickel, ponctuel et de bon conseil. Prix correct, rien à redire. »</p>
+              <div class="hr-author"><span class="avatar">K</span><span>Karim B.<small>Gémenos</small></span></div>
+            </div>
+          </article>
+          <article class="hr-slide">
+            <div class="hr-photo"><img src="https://images.unsplash.com/photo-1714692601149-3b76bd0b300f?auto=format&fit=crop&w=600&q=80" alt="Store banne posé sur une terrasse" loading="lazy" /></div>
+            <div class="hr-body">
+              <div class="hr-top"><div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><strong>4,9/5</strong></div>
+              <p class="hr-quote">« Très pro pour mes volets roulants. Finitions impeccables et chantier laissé propre. »</p>
+              <div class="hr-author"><span class="avatar">N</span><span>Nathalie R.<small>Aubagne</small></span></div>
+            </div>
+          </article>
         </div>
-        <p class="hero-card-quote">« Deux fenêtres changées en une matinée, travail nickel et bon conseil. Je recommande. »</p>
-        <div class="hero-card-author">
-          <span class="avatar">S</span>
-          <span>Sophie M.<small>Marseille 8<sup>e</sup></small></span>
-        </div>
-      </aside>
+        <div class="hr-dots" id="hrDots" aria-hidden="true"></div>
+      </div>
     </div>
 
     <a href="#services" class="hero-scroll" aria-label="Voir les prestations">
@@ -119,60 +136,25 @@
         <p class="section-lead">Menuiseries et climatisation, posées proprement et garanties. Vous avez un seul interlocuteur, du premier rendez-vous au service après-vente.</p>
       </div>
 
-      <div class="services-grid">
-        <article class="service-card reveal">
-          <div class="service-img"><img src="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=800&q=80" alt="Fenêtre PVC double vitrage posée dans un intérieur lumineux" loading="lazy" /></div>
-          <div class="service-body">
-            <h3>Fenêtres PVC &amp; aluminium</h3>
-            <p>Double vitrage sur-mesure, isolation thermique et phonique. Dépose et pose comprises, finitions soignées.</p>
-            <a href="#contact" class="link-arrow">Demander un devis <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-          </div>
-        </article>
-
-        <article class="service-card reveal">
-          <div class="service-img"><img src="https://images.unsplash.com/photo-1759587083707-f634a7f782ec?auto=format&fit=crop&w=800&q=80" alt="Volet roulant fermé sur une fenêtre de maison" loading="lazy" style="object-position:center top" /></div>
-          <div class="service-body">
-            <h3>Volets roulants solaires</h3>
-            <p>Motorisés, autonomes, sans gros travaux ni câblage à tirer. Confort, sécurité et économies au quotidien.</p>
-            <a href="#contact" class="link-arrow">Demander un devis <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-          </div>
-        </article>
-
-        <article class="service-card reveal">
-          <div class="service-img"><img src="https://images.unsplash.com/photo-1714692601149-3b76bd0b300f?auto=format&fit=crop&w=800&q=80" alt="Terrasse ombragée par un store banne rayé" loading="lazy" /></div>
-          <div class="service-body">
-            <h3>Stores bannes</h3>
-            <p>Pour vos terrasses et balcons. Protection solaire efficace, toile et coloris au choix, commande motorisée.</p>
-            <a href="#contact" class="link-arrow">Demander un devis <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-          </div>
-        </article>
-
-        <article class="service-card reveal">
-          <div class="service-img"><img src="https://images.unsplash.com/photo-1510266988780-b681a96dca2a?auto=format&fit=crop&w=800&q=80" alt="Porte d'entrée élégante d'une maison" loading="lazy" /></div>
-          <div class="service-body">
-            <h3>Portes d'entrée</h3>
-            <p>Sécurité renforcée, isolation et style. Aluminium ou PVC, sur-mesure, adaptées à votre façade.</p>
-            <a href="#contact" class="link-arrow">Demander un devis <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-          </div>
-        </article>
-
-        <article class="service-card reveal">
-          <div class="service-img"><img src="https://images.unsplash.com/photo-1597663459867-9903bf92dcfd?auto=format&fit=crop&w=800&q=80" alt="Garde-corps en verre sur une terrasse avec vue mer" loading="lazy" /></div>
-          <div class="service-body">
-            <h3>Garde-corps en verre</h3>
-            <p>Balcons et terrasses. Verre sécurisé, fixations discrètes, finitions propres pour une vue dégagée.</p>
-            <a href="#contact" class="link-arrow">Demander un devis <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-          </div>
-        </article>
-
-        <article class="service-card reveal">
-          <div class="service-img"><img src="https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?auto=format&fit=crop&w=800&q=80" alt="Salon lumineux, confort d'une climatisation réversible" loading="lazy" /></div>
-          <div class="service-body">
-            <h3>Climatisation réversible</h3>
-            <p>Installation et entretien de splits. Chaud l'hiver, frais l'été, pour un confort toute l'année.</p>
-            <a href="#contact" class="link-arrow">Demander un devis <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-          </div>
-        </article>
+      <div class="fan-carousel reveal">
+        <div class="fan" id="fan">
+          <div class="fan-card"><img src="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=600&q=80" alt="Fenêtres PVC double vitrage" loading="lazy" /><span class="fan-label">Fenêtres</span></div>
+          <div class="fan-card"><img src="https://images.unsplash.com/photo-1759587083707-f634a7f782ec?auto=format&fit=crop&w=600&q=80" alt="Volet roulant" loading="lazy" style="object-position:center top" /><span class="fan-label">Volets roulants</span></div>
+          <div class="fan-card"><img src="https://images.unsplash.com/photo-1714692601149-3b76bd0b300f?auto=format&fit=crop&w=600&q=80" alt="Store banne" loading="lazy" /><span class="fan-label">Stores bannes</span></div>
+          <div class="fan-card"><img src="https://images.unsplash.com/photo-1510266988780-b681a96dca2a?auto=format&fit=crop&w=600&q=80" alt="Porte d'entrée" loading="lazy" /><span class="fan-label">Portes d'entrée</span></div>
+          <div class="fan-card"><img src="https://images.unsplash.com/photo-1597663459867-9903bf92dcfd?auto=format&fit=crop&w=600&q=80" alt="Garde-corps en verre" loading="lazy" /><span class="fan-label">Garde-corps verre</span></div>
+          <div class="fan-card"><img src="https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?auto=format&fit=crop&w=600&q=80" alt="Climatisation réversible" loading="lazy" /><span class="fan-label">Climatisation</span></div>
+        </div>
+        <div class="fan-caption">
+          <h3 id="fanTitle">Fenêtres PVC &amp; aluminium</h3>
+          <p id="fanDesc">Double vitrage sur-mesure, isolation thermique et phonique. Dépose et pose comprises.</p>
+          <a href="#contact" class="link-arrow">Demander un devis <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+        <div class="fan-nav">
+          <button class="fan-arrow" id="fanPrev" aria-label="Prestation précédente"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+          <div class="fan-dots" id="fanDots"></div>
+          <button class="fan-arrow" id="fanNext" aria-label="Prestation suivante"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
       </div>
     </div>
   </section>
@@ -230,34 +212,52 @@
         <p class="section-lead">Quatre étapes, un seul interlocuteur, et un devis détaillé que vous validez avant le moindre travaux.</p>
       </div>
 
-      <ol class="steps">
-        <li class="step reveal">
-          <span class="step-num">01</span>
-          <div class="step-icon"><i class="fa-solid fa-comments" aria-hidden="true"></i></div>
-          <h3>Prise de contact</h3>
-          <p>Vous me décrivez votre projet par téléphone ou via le formulaire. On échange sur vos besoins.</p>
-        </li>
-        <li class="step reveal">
-          <span class="step-num">02</span>
-          <div class="step-icon"><i class="fa-solid fa-ruler-combined" aria-hidden="true"></i></div>
-          <h3>Visite &amp; devis gratuit</h3>
-          <p>Je viens prendre les mesures et évaluer le chantier, puis je vous remets un devis clair sous 48&nbsp;h.</p>
-        </li>
-        <li class="step reveal">
-          <span class="step-num">03</span>
-          <div class="step-icon"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i></div>
-          <h3>Pose soignée</h3>
-          <p>Intervention propre, dans les délais annoncés, avec un chantier laissé net en fin de journée.</p>
-        </li>
-        <li class="step reveal">
-          <span class="step-num">04</span>
-          <div class="step-icon"><i class="fa-solid fa-handshake-angle" aria-hidden="true"></i></div>
-          <h3>Suivi &amp; garantie</h3>
-          <p>Vos travaux sont garantis. En cas de besoin, je reste joignable et je passe régler le détail.</p>
-        </li>
-      </ol>
+      <div class="timeline">
+        <div class="tl-track">
+          <div class="tl-step reveal">
+            <div class="tl-node"><i class="fa-solid fa-comments" aria-hidden="true"></i><span class="tl-num">1</span></div>
+            <h3>Prise de contact</h3>
+            <p>Vous me décrivez votre projet par téléphone ou via le formulaire. On échange sur vos besoins.</p>
+          </div>
+          <div class="tl-step reveal">
+            <div class="tl-node"><i class="fa-solid fa-ruler-combined" aria-hidden="true"></i><span class="tl-num">2</span></div>
+            <h3>Visite &amp; devis gratuit</h3>
+            <p>Je prends les mesures, j'évalue le chantier et je vous remets un devis clair sous 48&nbsp;h.</p>
+          </div>
+          <div class="tl-step reveal">
+            <div class="tl-node"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i><span class="tl-num">3</span></div>
+            <h3>Pose soignée</h3>
+            <p>Intervention propre, dans les délais annoncés, chantier laissé net en fin de journée.</p>
+          </div>
+          <div class="tl-step reveal">
+            <div class="tl-node"><i class="fa-solid fa-handshake-angle" aria-hidden="true"></i><span class="tl-num">4</span></div>
+            <h3>Suivi &amp; garantie</h3>
+            <p>Vos travaux sont garantis. Je reste joignable et je passe régler le moindre détail.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- ============ BANDEAU DÉFILANT ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="mq-item"><i class="fa-solid fa-circle-check"></i> Devis gratuit sous 48 h</span>
+      <span class="mq-item"><i class="fa-solid fa-shield-halved"></i> Garantie décennale</span>
+      <span class="mq-item"><i class="fa-solid fa-coins"></i> Éligible MaPrimeRénov'</span>
+      <span class="mq-item"><i class="fa-solid fa-percent"></i> TVA réduite à 5,5 %</span>
+      <span class="mq-item"><i class="fa-solid fa-certificate"></i> Artisan certifié RGE</span>
+      <span class="mq-item"><i class="fa-solid fa-bolt"></i> Intervention rapide</span>
+      <span class="mq-item"><i class="fa-solid fa-users"></i> Particuliers &amp; professionnels</span>
+      <span class="mq-item"><i class="fa-solid fa-circle-check"></i> Devis gratuit sous 48 h</span>
+      <span class="mq-item"><i class="fa-solid fa-shield-halved"></i> Garantie décennale</span>
+      <span class="mq-item"><i class="fa-solid fa-coins"></i> Éligible MaPrimeRénov'</span>
+      <span class="mq-item"><i class="fa-solid fa-percent"></i> TVA réduite à 5,5 %</span>
+      <span class="mq-item"><i class="fa-solid fa-certificate"></i> Artisan certifié RGE</span>
+      <span class="mq-item"><i class="fa-solid fa-bolt"></i> Intervention rapide</span>
+      <span class="mq-item"><i class="fa-solid fa-users"></i> Particuliers &amp; professionnels</span>
+    </div>
+  </div>
 
   <!-- ============ AIDES ============ -->
   <section class="section aides" id="aides">
@@ -294,28 +294,48 @@
 
   <!-- ============ AVIS ============ -->
   <section class="section avis" id="avis">
-    <div class="container">
-      <div class="section-head reveal">
+    <div class="img-marquee" aria-hidden="true">
+      <div class="img-marquee-track">
+        <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1595039357995-905cad2933e3?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1695144438038-a8ca899c20d7?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1714692601149-3b76bd0b300f?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1510266988780-b681a96dca2a?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1597663459867-9903bf92dcfd?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1595039357995-905cad2933e3?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1695144438038-a8ca899c20d7?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1714692601149-3b76bd0b300f?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1510266988780-b681a96dca2a?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1597663459867-9903bf92dcfd?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=400&q=75" alt="" loading="lazy" />
+      </div>
+    </div>
+    <div class="container avis-inner2">
+      <div class="avis-intro reveal">
         <span class="eyebrow">Avis clients</span>
         <h2 class="section-title">Ils m'ont fait confiance</h2>
         <div class="rating-global">
           <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
           <span><strong>4,9/5</strong> sur la base des avis clients</span>
         </div>
+        <p class="avis-trust">Du simple remplacement de fenêtre à la rénovation complète, chaque chantier est traité avec le même soin.</p>
       </div>
-
-      <div class="avis-grid">
-        <blockquote class="avis-card reveal">
+      <div class="avis-stack">
+        <blockquote class="avis-row reveal">
           <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
           <p>« Travail propre et rapide, deux fenêtres changées en une matinée. Très bon conseil, je recommande sans hésiter. »</p>
           <footer><span class="avatar">S</span><span>Sophie M.<small>Marseille 8<sup>e</sup></small></span></footer>
         </blockquote>
-        <blockquote class="avis-card reveal">
+        <blockquote class="avis-row reveal">
           <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
           <p>« José a posé ma climatisation nickel, ponctuel et de bon conseil sur le modèle. Prix correct, rien à redire. »</p>
           <footer><span class="avatar">K</span><span>Karim B.<small>Gémenos</small></span></footer>
         </blockquote>
-        <blockquote class="avis-card reveal">
+        <blockquote class="avis-row reveal">
           <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
           <p>« Très professionnel pour mes volets roulants solaires. Finitions impeccables et chantier laissé propre. »</p>
           <footer><span class="avatar">N</span><span>Nathalie R.<small>Aubagne</small></span></footer>
@@ -336,6 +356,16 @@
         <a href="tel:+33612345678" class="btn btn-ghost-light btn-lg"><i class="fa-solid fa-phone" aria-hidden="true"></i> 06 12 34 56 78</a>
       </div>
     </div>
+  </section>
+
+  <!-- ============ CARTE / ZONE ============ -->
+  <section class="map-section">
+    <div class="container map-head reveal">
+      <span class="eyebrow">Zone d'intervention</span>
+      <h2 class="section-title">Marseille et 30 km à la ronde</h2>
+      <p class="section-lead">J'interviens sur Marseille, Gémenos, Aubagne, La Ciotat, Cassis et les communes alentour.</p>
+    </div>
+    <div id="map" class="map-embed" role="img" aria-label="Carte de la zone d'intervention autour de Marseille"></div>
   </section>
 
   <!-- ============ CONTACT ============ -->
@@ -475,6 +505,8 @@
 
 <a href="#hero" class="back-to-top" id="backToTop" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></a>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>

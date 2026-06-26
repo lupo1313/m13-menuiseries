@@ -158,4 +158,120 @@
       success.hidden = false;
     });
   }
+
+  /* ---------- Carrousel d'avis (hero) ---------- */
+  const hrVp = document.getElementById('hrViewport');
+  if (hrVp) {
+    const hrSlides = hrVp.querySelectorAll('.hr-slide');
+    const hrDots = document.getElementById('hrDots');
+    let hrIdx = 0;
+    hrSlides.forEach(function (_, i) {
+      const d = document.createElement('button');
+      d.className = 'hr-dot' + (i === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Avis ' + (i + 1));
+      d.addEventListener('click', function () { hrGo(i); });
+      hrDots.appendChild(d);
+    });
+    const dotEls = hrDots.querySelectorAll('.hr-dot');
+    function hrSync() { dotEls.forEach(function (d, i) { d.classList.toggle('active', i === hrIdx); }); }
+    function hrGo(i) { hrIdx = i; hrVp.scrollTo({ left: i * hrVp.clientWidth, behavior: 'smooth' }); hrSync(); }
+    function hrNext() { hrGo((hrIdx + 1) % hrSlides.length); }
+    let hrScrollT;
+    hrVp.addEventListener('scroll', function () {
+      clearTimeout(hrScrollT);
+      hrScrollT = setTimeout(function () { hrIdx = Math.round(hrVp.scrollLeft / hrVp.clientWidth); hrSync(); }, 90);
+    }, { passive: true });
+    let hrTimer = setInterval(hrNext, 4500);
+    hrVp.addEventListener('pointerenter', function () { clearInterval(hrTimer); });
+    hrVp.addEventListener('pointerdown', function () { clearInterval(hrTimer); });
+    hrVp.addEventListener('pointerleave', function () { clearInterval(hrTimer); hrTimer = setInterval(hrNext, 4500); });
+  }
+
+  /* ---------- Éventail de prestations (fan carousel) ---------- */
+  const fan = document.getElementById('fan');
+  if (fan && window.gsap) {
+    const fanCards = Array.prototype.slice.call(fan.querySelectorAll('.fan-card'));
+    const FN = fanCards.length;
+    const fanTitle = document.getElementById('fanTitle');
+    const fanDesc = document.getElementById('fanDesc');
+    const fanDotsWrap = document.getElementById('fanDots');
+    const fanData = [
+      { t: 'Fenêtres PVC & aluminium', d: 'Double vitrage sur-mesure, isolation thermique et phonique. Dépose et pose comprises.' },
+      { t: 'Volets roulants solaires', d: 'Motorisés, autonomes, sans gros travaux ni câblage à tirer. Confort et sécurité au quotidien.' },
+      { t: 'Stores bannes', d: 'Protection solaire pour vos terrasses et balcons. Toile, coloris et motorisation au choix.' },
+      { t: "Portes d'entrée", d: 'Sécurité renforcée, isolation et style. Aluminium ou PVC, sur-mesure, adaptées à votre façade.' },
+      { t: 'Garde-corps en verre', d: 'Verre sécurisé, fixations discrètes et finitions propres pour une vue dégagée.' },
+      { t: 'Climatisation réversible', d: 'Installation et entretien de splits. Chaud l’hiver, frais l’été, toute l’année.' }
+    ];
+    const POS = [
+      { rot: 0, sc: 1, x: 0, y: 0, z: 10 },
+      { rot: 11, sc: 0.9, x: 11, y: 1.4, z: 5 },
+      { rot: 21, sc: 0.78, x: 20, y: 4.6, z: 2 }
+    ];
+    const VISIBLE = 2;
+    let fanCenter = 0;
+
+    fanCards.forEach(function (_, i) {
+      const d = document.createElement('button');
+      d.className = 'fan-dot';
+      d.setAttribute('aria-label', fanData[i].t);
+      d.addEventListener('click', function () { fanGo(i); });
+      fanDotsWrap.appendChild(d);
+    });
+    const fanDotEls = fanDotsWrap.querySelectorAll('.fan-dot');
+
+    function fanMult() { const w = window.innerWidth; return w < 640 ? 0.5 : w < 1024 ? 0.72 : 1; }
+
+    function fanLayout(animate) {
+      const m = fanMult();
+      fanCards.forEach(function (card, i) {
+        let off = i - fanCenter;
+        if (off > FN / 2) off -= FN;
+        if (off < -FN / 2) off += FN;
+        const a = Math.abs(off);
+        card.classList.toggle('is-center', off === 0);
+        if (a > VISIBLE) {
+          gsap.to(card, { opacity: 0, scale: 0.6, duration: animate ? 0.35 : 0, overwrite: 'auto' });
+          gsap.set(card, { zIndex: 0, pointerEvents: 'none' });
+          return;
+        }
+        const p = POS[a];
+        const dir = off < 0 ? -1 : 1;
+        gsap.to(card, {
+          xPercent: -50, yPercent: -50,
+          x: (p.x * dir * m) + 'rem', y: (p.y * m) + 'rem',
+          rotation: p.rot * dir, scale: p.sc, opacity: 1,
+          duration: animate ? 0.6 : 0, ease: 'power3.out', overwrite: 'auto'
+        });
+        gsap.set(card, { zIndex: p.z, pointerEvents: 'auto' });
+      });
+      fanTitle.textContent = fanData[fanCenter].t;
+      fanDesc.textContent = fanData[fanCenter].d;
+      fanDotEls.forEach(function (d, i) { d.classList.toggle('active', i === fanCenter); });
+    }
+
+    function fanGo(i) { fanCenter = ((i % FN) + FN) % FN; fanLayout(true); }
+
+    document.getElementById('fanPrev').addEventListener('click', function () { fanGo(fanCenter - 1); });
+    document.getElementById('fanNext').addEventListener('click', function () { fanGo(fanCenter + 1); });
+    fanCards.forEach(function (card, i) {
+      card.addEventListener('click', function () { if (!card.classList.contains('is-center')) fanGo(i); });
+    });
+
+    fanLayout(false);
+    let fanRT;
+    window.addEventListener('resize', function () { clearTimeout(fanRT); fanRT = setTimeout(function () { fanLayout(false); }, 120); });
+  }
+
+  /* ---------- Carte zone d'intervention (Leaflet + OpenStreetMap) ---------- */
+  const mapEl = document.getElementById('map');
+  if (mapEl && window.L) {
+    const center = [43.2965, 5.3698];
+    const map = L.map('map', { scrollWheelZoom: false }).setView(center, 9);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap' }).addTo(map);
+    const circle = L.circle(center, { radius: 30000, color: '#E08A2E', weight: 2, fillColor: '#E08A2E', fillOpacity: 0.12 }).addTo(map);
+    L.circleMarker(center, { radius: 7, color: '#fff', weight: 2, fillColor: '#122F4A', fillOpacity: 1 }).addTo(map).bindPopup('M13 Menuiseries · Marseille');
+    map.fitBounds(circle.getBounds(), { padding: [24, 24] });
+    setTimeout(function () { map.invalidateSize(); }, 250);
+  }
 })();
