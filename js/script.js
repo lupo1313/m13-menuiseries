@@ -140,23 +140,56 @@
     });
   });
 
-  /* ---------- Formulaire de devis (démo) ---------- */
-  const form = document.getElementById('devisForm');
-  if (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const nom = form.querySelector('#nom');
-      const tel = form.querySelector('#tel');
-      if (!nom.value.trim() || !tel.value.trim()) {
-        (nom.value.trim() ? tel : nom).focus();
-        return;
+  /* ---------- Formulaire de devis multi-étapes ---------- */
+  const dForm = document.getElementById('devisForm');
+  if (dForm) {
+    const wrap = dForm.closest('.devis-form-wrap');
+    const dSteps = dForm.querySelectorAll('.devis-step');
+    const dHeads = wrap.querySelectorAll('.ds-step');
+    const dBar = document.getElementById('devisBar');
+    const dBack = document.getElementById('devisBack');
+    const dNext = document.getElementById('devisNext');
+    const dSubmit = document.getElementById('devisSubmit');
+    const dProjet = document.getElementById('projet');
+    const dTotal = dSteps.length;
+    let dCur = 0;
+
+    function dRender() {
+      dSteps.forEach(function (s, i) { s.classList.toggle('active', i === dCur); });
+      dHeads.forEach(function (h, i) { h.classList.toggle('active', i === dCur); h.classList.toggle('done', i < dCur); });
+      dBar.style.width = Math.round(((dCur + 1) / dTotal) * 100) + '%';
+      dBack.hidden = dCur === 0;
+      dNext.hidden = dCur === dTotal - 1;
+      dSubmit.hidden = dCur !== dTotal - 1;
+    }
+    function dShake() { wrap.classList.add('shake'); setTimeout(function () { wrap.classList.remove('shake'); }, 430); }
+    function dValid() {
+      if (dCur === 1) {
+        const nom = document.getElementById('nom'), tel = document.getElementById('tel');
+        if (!nom.value.trim()) { nom.focus(); dShake(); return false; }
+        if (!tel.value.trim()) { tel.focus(); dShake(); return false; }
       }
-      const success = document.getElementById('formSuccess');
-      form.querySelectorAll('.field, .form-note, button[type="submit"]').forEach(function (el) {
-        el.style.display = 'none';
+      return true;
+    }
+    dForm.querySelectorAll('.chip').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        dForm.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('selected'); });
+        chip.classList.add('selected');
+        dProjet.value = chip.dataset.val;
+        dCur = 1; dRender();
       });
-      success.hidden = false;
     });
+    dNext.addEventListener('click', function () { if (dValid() && dCur < dTotal - 1) { dCur++; dRender(); } });
+    dBack.addEventListener('click', function () { if (dCur > 0) { dCur--; dRender(); } });
+    dForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!dValid()) return;
+      dForm.style.display = 'none';
+      wrap.querySelector('.devis-progress').style.display = 'none';
+      wrap.querySelector('.devis-steps-head').style.display = 'none';
+      document.getElementById('devisSuccess').hidden = false;
+    });
+    dRender();
   }
 
   /* ---------- Carrousel d'avis (hero) ---------- */
@@ -254,8 +287,22 @@
 
     document.getElementById('fanPrev').addEventListener('click', function () { fanGo(fanCenter - 1); });
     document.getElementById('fanNext').addEventListener('click', function () { fanGo(fanCenter + 1); });
+
+    let fanDownX = null, fanDownY = null, fanMoved = false;
+    fan.addEventListener('pointerdown', function (e) { fanDownX = e.clientX; fanDownY = e.clientY; fanMoved = false; });
+    fan.addEventListener('pointermove', function (e) {
+      if (fanDownX === null) return;
+      const dx = e.clientX - fanDownX, dy = e.clientY - fanDownY;
+      if (!fanMoved && Math.abs(dx) > 38 && Math.abs(dx) > Math.abs(dy)) {
+        fanMoved = true;
+        fanGo(fanCenter + (dx < 0 ? 1 : -1));
+        fanDownX = null;
+      }
+    });
+    fan.addEventListener('pointerup', function () { fanDownX = null; });
+    fan.addEventListener('pointercancel', function () { fanDownX = null; });
     fanCards.forEach(function (card, i) {
-      card.addEventListener('click', function () { if (!card.classList.contains('is-center')) fanGo(i); });
+      card.addEventListener('click', function () { if (!fanMoved && !card.classList.contains('is-center')) fanGo(i); });
     });
 
     fanLayout(false);
@@ -273,5 +320,31 @@
     L.circleMarker(center, { radius: 7, color: '#fff', weight: 2, fillColor: '#122F4A', fillOpacity: 1 }).addTo(map).bindPopup('M13 Menuiseries · Marseille');
     map.fitBounds(circle.getBounds(), { padding: [24, 24] });
     setTimeout(function () { map.invalidateSize(); }, 250);
+  }
+
+  /* ---------- Carrousel d'avis ---------- */
+  const revVp = document.getElementById('revViewport');
+  if (revVp) {
+    const revSlides = revVp.querySelectorAll('.rev-slide');
+    const revDotsWrap = document.getElementById('revDots');
+    let revIdx = 0;
+    revSlides.forEach(function (_, i) {
+      const d = document.createElement('button');
+      d.className = 'rev-dot' + (i === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Avis ' + (i + 1));
+      d.addEventListener('click', function () { revGo(i); });
+      revDotsWrap.appendChild(d);
+    });
+    const revDots = revDotsWrap.querySelectorAll('.rev-dot');
+    function revStep() { return revSlides.length > 1 ? revSlides[1].offsetLeft - revSlides[0].offsetLeft : revVp.clientWidth; }
+    function revSync() { revDots.forEach(function (d, i) { d.classList.toggle('active', i === revIdx); }); }
+    function revGo(i) { revIdx = ((i % revSlides.length) + revSlides.length) % revSlides.length; revVp.scrollTo({ left: revSlides[revIdx].offsetLeft, behavior: 'smooth' }); revSync(); }
+    let revST;
+    revVp.addEventListener('scroll', function () { clearTimeout(revST); revST = setTimeout(function () { revIdx = Math.round(revVp.scrollLeft / revStep()); revSync(); }, 90); }, { passive: true });
+    document.getElementById('revPrev').addEventListener('click', function () { revGo(revIdx - 1); });
+    document.getElementById('revNext').addEventListener('click', function () { revGo(revIdx + 1); });
+    let revTimer = setInterval(function () { revGo(revIdx + 1); }, 6000);
+    revVp.addEventListener('pointerenter', function () { clearInterval(revTimer); });
+    revVp.addEventListener('pointerdown', function () { clearInterval(revTimer); });
   }
 })();
