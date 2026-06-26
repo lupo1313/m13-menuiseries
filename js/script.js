@@ -253,7 +253,7 @@
     });
     const fanDotEls = fanDotsWrap.querySelectorAll('.fan-dot');
 
-    function fanMult() { const w = window.innerWidth; return w < 640 ? 0.5 : w < 1024 ? 0.72 : 1; }
+    function fanMult() { const w = window.innerWidth; return w < 480 ? 0.34 : w < 640 ? 0.42 : w < 1024 ? 0.7 : 1; }
 
     function fanLayout(animate) {
       const m = fanMult();
