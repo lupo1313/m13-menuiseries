@@ -400,7 +400,7 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.08;col
 
 /* ---------- Footer ---------- */
 .site-footer{background:#0E2438;color:rgba(233,241,247,.7)}
-.footer-inner{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:2.4rem;padding:clamp(3rem,5vw,4.5rem) 0 2.6rem}
+.footer-inner{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:2.4rem;padding:clamp(3rem,5vw,4.5rem) clamp(1.25rem,5vw,2.25rem) 2.6rem}
 .brand-light .brand-text{color:#fff}
 .footer-brand p{margin:1.2rem 0;font-size:.95rem;max-width:32ch}
 .footer-social{display:flex;gap:.7rem}
@@ -411,7 +411,7 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.08;col
 .footer-col a:hover{color:var(--amber)}
 .footer-col i{color:var(--amber);width:18px}
 .footer-bottom{border-top:1px solid rgba(255,255,255,.1)}
-.footer-bottom-inner{display:flex;justify-content:space-between;gap:1rem;padding:1.5rem 0;font-size:.85rem;flex-wrap:wrap}
+.footer-bottom-inner{display:flex;justify-content:space-between;gap:1rem;padding:1.5rem clamp(1.25rem,5vw,2.25rem);font-size:.85rem;flex-wrap:wrap}
 .footer-bottom a:hover{color:var(--amber)}
 
 /* ---------- Back to top ---------- */

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>M13 Menuiseries · Votre stratégie digitale</title>
+<meta name="description" content="La stratégie digitale complète mise en place pour M13 Menuiseries : bien plus qu'un site, un écosystème pour développer la visibilité locale et les demandes de devis." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<style>
+/* =====================================================================
+   M13 MENUISERIES — Présentation stratégie digitale
+   Single-file. Palette cohérente avec le site (bleu marine + ambré).
+   Sections réutilisables pour d'autres clients (changer le contenu).
+   ===================================================================== */
+:root{
+  --navy:#0F2A44; --navy-2:#16344F; --navy-soft:#1E436A;
+  --amber:#E08A2E; --amber-2:#C9761F; --amber-050:#FBF1E2;
+  --cream:#FBFAF7; --sand:#F4EEE4; --ink:#16242F; --muted:#5E6B77;
+  --line:#E7E0D4; --line-soft:#EFEAE0; --white:#fff;
+  --font-d:'Fraunces',Georgia,serif; --font-s:'Manrope',system-ui,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1); --container:1080px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:var(--font-s);color:var(--ink);background:var(--cream);line-height:1.65;font-size:17px;overflow-x:hidden;overflow-wrap:break-word}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+.wrap{width:100%;max-width:var(--container);margin:0 auto;padding:0 clamp(1.3rem,5vw,2rem)}
+h1,h2,h3{font-family:var(--font-d);font-weight:500;line-height:1.08;letter-spacing:-.015em;color:var(--navy)}
+.eyebrow{display:inline-block;font-weight:700;font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--amber-2);margin-bottom:1.3rem}
+.section{padding:clamp(5rem,11vw,9rem) 0;position:relative}
+.section.dark{background:var(--navy);color:#fff}
+.section.dark h1,.section.dark h2,.section.dark h3{color:#fff}
+.section.dark .eyebrow{color:#F0B775}
+.section.sand{background:var(--sand)}
+.section.white{background:var(--white)}
+.s-title{font-size:clamp(2.1rem,5.2vw,3.8rem)}
+.s-lead{font-size:clamp(1.05rem,1.8vw,1.3rem);color:var(--muted);max-width:46ch;margin-top:1.3rem}
+.dark .s-lead{color:rgba(233,241,247,.78)}
+.center{text-align:center}
+.center .s-lead{margin-left:auto;margin-right:auto}
+
+/* ---------- Barre de progression + nav ---------- */
+.progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--amber);z-index:120;transition:width .1s linear}
+.nav{position:fixed;top:0;left:0;width:100%;z-index:110;padding:.7rem 0;transform:translateY(-110%);transition:transform .5s var(--ease),background .4s,box-shadow .4s;background:rgba(251,250,247,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(15,42,68,.07)}
+.nav.show{transform:none}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:.6rem;font-family:var(--font-d);font-weight:600;font-size:1.05rem;color:var(--navy)}
+.nav-brand .mk{width:30px;height:30px;border-radius:8px;background:var(--amber);color:var(--navy);display:grid;place-items:center;font-size:.95rem}
+.nav-links{display:flex;align-items:center;gap:1.6rem}
+.nav-links a{font-weight:600;font-size:.9rem;color:var(--muted);transition:color .25s}
+.nav-links a:hover{color:var(--navy)}
+.nav-cta{background:var(--navy);color:#fff!important;padding:.55rem 1.1rem;border-radius:99px;font-size:.85rem;transition:background .25s}
+.nav-cta:hover{background:var(--navy-2)}
+@media(max-width:680px){.nav-links a:not(.nav-cta){display:none}}
+
+/* ---------- Boutons ---------- */
+.btn{display:inline-flex;align-items:center;gap:.6rem;font-weight:600;font-size:1.02rem;padding:1rem 1.8rem;border-radius:99px;cursor:pointer;border:1.5px solid transparent;transition:transform .35s var(--ease),box-shadow .35s var(--ease),background .25s,color .25s}
+.btn i{transition:transform .35s var(--ease)}
+.btn-amber{background:var(--amber);color:var(--navy);box-shadow:0 10px 26px rgba(224,138,46,.32)}
+.btn-amber:hover{background:var(--amber-2);transform:translateY(-3px)}
+.btn-amber:hover i{transform:translateY(3px)}
+.btn-light{background:#fff;color:var(--navy)}
+.btn-light:hover{transform:translateY(-3px)}
+.btn-ghost{background:transparent;border-color:rgba(255,255,255,.4);color:#fff}
+.btn-ghost:hover{background:#fff;color:var(--navy)}
+
+/* ---------- Reveal ---------- */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- HERO ---------- */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background:radial-gradient(120% 90% at 100% 0%,#fff,var(--cream) 60%)}
+.hero::after{content:"";position:absolute;right:-10%;top:-10%;width:60%;height:80%;background:radial-gradient(circle,rgba(224,138,46,.13),transparent 60%);pointer-events:none}
+.hero-in{position:relative;z-index:1;max-width:880px}
+.hero h1{font-size:clamp(2.6rem,7vw,5.4rem);font-weight:500}
+.hero h1 em{font-style:italic;color:var(--amber-2)}
+.hero p{font-size:clamp(1.1rem,2vw,1.4rem);color:var(--muted);margin:1.8rem 0 2.6rem;max-width:60ch}
+.hero-scroll{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.hero-scroll i{animation:bob 1.8s var(--ease) infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ---------- Listes / cartes génériques ---------- */
+.points{display:grid;gap:1.1rem;margin-top:2.6rem;max-width:640px}
+.point{display:flex;gap:1.1rem;align-items:flex-start;font-size:1.08rem}
+.point .ic{flex-shrink:0;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:1.15rem;background:var(--amber-050);color:var(--amber-2)}
+.dark .point .ic{background:rgba(224,138,46,.16);color:#F0B775}
+.point.muted .ic{background:rgba(94,107,119,.12);color:var(--muted)}
+.point b{font-weight:600}
+.point span{color:var(--muted)}
+.dark .point span{color:rgba(233,241,247,.72)}
+
+.keymsg{margin-top:3rem;padding:1.8rem 2rem;border-left:3px solid var(--amber);background:var(--amber-050);border-radius:0 16px 16px 0;font-family:var(--font-d);font-style:italic;font-size:clamp(1.2rem,2.4vw,1.7rem);color:var(--navy);max-width:760px}
+.dark .keymsg{background:rgba(224,138,46,.1);color:#fff;border-color:var(--amber)}
+
+/* ---------- Recherches (problème) ---------- */
+.searches{display:grid;gap:.9rem;margin-top:2.6rem;max-width:560px}
+.search-bar{display:flex;align-items:center;gap:.9rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:99px;padding:.9rem 1.3rem;font-size:1.05rem;color:rgba(255,255,255,.92)}
+.search-bar i{color:#F0B775}
+
+/* ---------- Écosystème (solution) ---------- */
+.eco{position:relative;margin-top:3rem}
+.eco-lines{display:none}
+.eco-center{margin:0 auto 1.4rem;width:148px;height:148px;border-radius:50%;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 18px 50px rgba(15,42,68,.28);z-index:2}
+.eco-center .lg{font-family:var(--font-d);font-weight:600;font-size:1.7rem}
+.eco-center small{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:#F0B775;margin-top:.2rem}
+.eco-nodes{display:flex;flex-direction:column;align-items:center;gap:.7rem}
+.eco-node{display:flex;align-items:center;gap:.6rem;background:#fff;border:1px solid var(--line);border-radius:99px;padding:.7rem 1.1rem;font-weight:600;font-size:.92rem;color:var(--navy);box-shadow:0 6px 16px rgba(15,42,68,.06);white-space:nowrap}
+.eco-node i{color:var(--amber-2)}
+.eco--radial{height:600px}
+.eco--radial .eco-lines{display:block;position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.eco--radial .eco-lines line{stroke:rgba(224,138,46,.45);stroke-width:1.5;stroke-dasharray:5 6}
+.eco--radial .eco-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;width:168px;height:168px}
+.eco--radial .eco-nodes{display:block}
+.eco--radial .eco-node{position:absolute}
+
+/* ---------- Mockup navigateur (site) ---------- */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+.split>*{min-width:0}
+.browser{border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(15,42,68,.16);background:#fff}
+.browser-bar{display:flex;align-items:center;gap:7px;padding:.7rem 1rem;background:#ECEAE4;border-bottom:1px solid #DEDAD0}
+.browser-bar span{width:10px;height:10px;border-radius:50%}
+.browser-bar .u{flex:1;margin-left:.6rem;background:#fff;border-radius:6px;padding:.35rem .8rem;font-size:.78rem;color:#7a7a75}
+.browser-body{aspect-ratio:4/3;background:linear-gradient(160deg,var(--navy),var(--navy-soft));position:relative;display:flex;flex-direction:column;justify-content:center;padding:2rem;gap:.8rem}
+.browser-body .bh{height:14px;width:55%;background:rgba(255,255,255,.85);border-radius:6px}
+.browser-body .bt{height:9px;width:80%;background:rgba(255,255,255,.4);border-radius:6px}
+.browser-body .bt.s{width:65%}
+.browser-body .bbtn{margin-top:.8rem;height:34px;width:160px;background:var(--amber);border-radius:99px}
+.mini-feats{display:grid;gap:1rem;margin-top:2.2rem}
+.mini-feat{display:flex;align-items:center;gap:.9rem;font-weight:600;color:var(--navy)}
+.mini-feat i{width:40px;height:40px;border-radius:12px;background:var(--amber-050);color:var(--amber-2);display:grid;place-items:center}
+
+/* ---------- Tunnel Google ---------- */
+.funnel{display:grid;gap:0;margin-top:3rem;max-width:560px;margin-left:auto;margin-right:auto}
+.funnel-step{display:flex;align-items:center;gap:1.2rem;padding:1.2rem 1.5rem;background:#fff;border:1px solid var(--line-soft);border-radius:16px;box-shadow:0 8px 22px rgba(15,42,68,.06);position:relative}
+.funnel-step .n{flex-shrink:0;width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:700;font-family:var(--font-d)}
+.funnel-step b{font-weight:600;color:var(--navy);font-size:1.05rem}
+.funnel-arrow{display:flex;justify-content:center;color:var(--amber);font-size:1.1rem;padding:.45rem 0}
+.funnel-step.win{background:var(--navy);border-color:var(--navy)}
+.funnel-step.win b{color:#fff}
+.funnel-step.win .n{background:var(--amber);color:var(--navy)}
+
+/* ---------- Grilles de pages / chips ---------- */
+.pgroup{margin-top:2.4rem}
+.pgroup h3{font-size:1.15rem;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
+.pgroup h3 i{color:var(--amber-2)}
+.chips{display:flex;flex-wrap:wrap;gap:.6rem}
+.chip{background:#fff;border:1px solid var(--line);border-radius:99px;padding:.55rem 1.05rem;font-weight:600;font-size:.9rem;color:var(--navy)}
+.dark .chip{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);color:#fff}
+.chip.geo{background:var(--amber-050);border-color:#F0D7AE;color:var(--amber-2)}
+
+/* ---------- Cartes articles ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.2rem;margin-top:2.6rem}
+.card{background:#fff;border:1px solid var(--line-soft);border-radius:18px;padding:1.6rem;box-shadow:0 8px 22px rgba(15,42,68,.05);transition:transform .4s var(--ease),box-shadow .4s var(--ease)}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(15,42,68,.1)}
+.card .tag{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber-2)}
+.card h3{font-size:1.18rem;margin:.7rem 0}
+.card p{color:var(--muted);font-size:.95rem}
+
+/* ---------- GBP ---------- */
+.gbp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:2.6rem}
+.gbp-item{display:flex;align-items:center;gap:.9rem;background:#fff;border:1px solid var(--line-soft);border-radius:14px;padding:1.1rem 1.3rem;font-weight:600;color:var(--navy)}
+.gbp-item i{width:42px;height:42px;border-radius:12px;background:var(--amber-050);color:var(--amber-2);display:grid;place-items:center;flex-shrink:0}
+
+/* ---------- Suivi mensuel ---------- */
+.month{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-top:2.6rem}
+.dark .month .gbp-item{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:#fff}
+.dark .month .gbp-item i{background:rgba(224,138,46,.16);color:#F0B775}
+
+/* ---------- Évolution (frise) ---------- */
+.timeline{margin-top:3rem;display:grid;gap:1.2rem}
+.tl-row{display:grid;grid-template-columns:120px 1fr;gap:1.4rem;align-items:start;position:relative}
+.tl-row>*{min-width:0}
+.tl-when{font-family:var(--font-d);font-weight:600;font-size:1.3rem;color:var(--amber)}
+.tl-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:1.3rem 1.5rem}
+.tl-card b{display:block;font-weight:600;font-size:1.12rem;margin-bottom:.25rem}
+.tl-card span{color:rgba(233,241,247,.72);font-size:.96rem}
+.disclaimer{margin-top:2.4rem;display:flex;gap:.8rem;align-items:flex-start;font-size:.95rem;color:rgba(233,241,247,.82);max-width:640px}
+.disclaimer i{color:#F0B775;margin-top:.2rem}
+
+/* ---------- Comparatif ---------- */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:3rem}
+.compare>*{min-width:0}
+.comp{border-radius:20px;padding:2rem;border:1px solid var(--line)}
+.comp.basic{background:#fff}
+.comp.full{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 24px 60px rgba(15,42,68,.2)}
+.comp h3{font-size:1.3rem;margin-bottom:1.3rem}
+.comp.full h3{color:#fff}
+.comp ul{display:grid;gap:.8rem}
+.comp li{display:flex;align-items:center;gap:.7rem;font-size:.98rem}
+.comp.basic li{color:var(--muted)}
+.comp.basic li i{color:#B9C0C7}
+.comp.full li i{color:#7BD39B}
+.comp .tagline{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber-2);margin-bottom:.4rem}
+.comp.full .tagline{color:#F0B775}
+
+/* ---------- Conclusion ---------- */
+.final{text-align:center}
+.final h2{font-size:clamp(2rem,5vw,3.6rem);max-width:900px;margin:0 auto;color:#fff}
+.final h2 em{font-style:italic;color:#F0B775}
+.final .btn{margin-top:2.6rem}
+
+/* ---------- Back to top ---------- */
+.top{position:fixed;right:1.5rem;bottom:1.5rem;width:48px;height:48px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;box-shadow:0 14px 34px rgba(15,42,68,.25);opacity:0;visibility:hidden;transform:translateY(14px);transition:.4s var(--ease);z-index:90}
+.top.show{opacity:1;visibility:visible;transform:none}
+.top:hover{background:var(--amber);color:var(--navy)}
+
+/* ---------- Responsive ---------- */
+@media(max-width:760px){
+  .split,.compare{grid-template-columns:1fr}
+  .tl-row{grid-template-columns:1fr;gap:.4rem}
+  .browser{order:-1}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.01ms!important;scroll-behavior:auto}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="#hero" class="nav-brand"><span class="mk"><i class="fa-solid fa-border-all"></i></span> M13 · Stratégie</a>
+    <div class="nav-links">
+      <a href="#solution">La solution</a>
+      <a href="#suivi">Le suivi</a>
+      <a href="#fin" class="nav-cta">Lancer la stratégie</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ 1 · HERO ============ -->
+<header class="hero" id="hero">
+  <div class="wrap hero-in reveal">
+    <span class="eyebrow">Stratégie digitale · M13 Menuiseries</span>
+    <h1>Votre entreprise mérite d'être <em>trouvée</em>.</h1>
+    <p>Nous ne créons pas seulement un site internet. Nous construisons une présence digitale complète pour développer votre visibilité locale.</p>
+    <a href="#aujourdhui" class="btn btn-amber">Découvrir la stratégie <i class="fa-solid fa-arrow-down"></i></a>
+  </div>
+  <a href="#aujourdhui" class="hero-scroll">Défiler <i class="fa-solid fa-chevron-down"></i></a>
+</header>
+
+<!-- ============ 2 · AUJOURD'HUI ============ -->
+<section class="section white" id="aujourdhui">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">Aujourd'hui</span>
+      <h2 class="s-title">Vous avez déjà des atouts.</h2>
+    </div>
+    <ul class="points">
+      <li class="point reveal"><span class="ic"><i class="fa-solid fa-comments"></i></span><div><b>Le bouche-à-oreille fonctionne</b> <span>— c'est votre meilleure source de clients.</span></div></li>
+      <li class="point reveal"><span class="ic"><i class="fa-brands fa-instagram"></i></span><div><b>Instagram vous donne de la visibilité</b> <span>— mais auprès d'une audience limitée.</span></div></li>
+      <li class="point reveal muted"><span class="ic"><i class="fa-brands fa-google"></i></span><div><b>Google reste sous-exploité</b> <span>— c'est là que tout se joue en local.</span></div></li>
+      <li class="point reveal muted"><span class="ic"><i class="fa-solid fa-magnifying-glass"></i></span><div><b>Des clients vous cherchent déjà</b> <span>— sans forcément vous trouver.</span></div></li>
+    </ul>
+    <p class="keymsg reveal">Le but n'est pas de remplacer le bouche-à-oreille, mais de l'amplifier.</p>
+  </div>
+</section>
+
+<!-- ============ 3 · LE VRAI PROBLÈME ============ -->
+<section class="section dark" id="probleme">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">Le vrai problème</span>
+      <h2 class="s-title">Chaque jour, on tape ces recherches.</h2>
+    </div>
+    <div class="searches">
+      <div class="search-bar reveal"><i class="fa-solid fa-magnifying-glass"></i> menuisier Marseille</div>
+      <div class="search-bar reveal"><i class="fa-solid fa-magnifying-glass"></i> pose fenêtre PVC</div>
+      <div class="search-bar reveal"><i class="fa-solid fa-magnifying-glass"></i> baie vitrée prix</div>
+      <div class="search-bar reveal"><i class="fa-solid fa-magnifying-glass"></i> volet roulant Marseille</div>
+      <div class="search-bar reveal"><i class="fa-solid fa-magnifying-glass"></i> climatisation maison</div>
+    </div>
+    <p class="keymsg reveal">Mais ils tombent souvent sur vos concurrents. Chaque recherche locale est une opportunité de devis.</p>
+  </div>
+</section>
+
+<!-- ============ 4 · LA SOLUTION ============ -->
+<section class="section" id="solution">
+  <div class="wrap center">
+    <div class="reveal">
+      <span class="eyebrow">La solution</span>
+      <h2 class="s-title">Un écosystème, pas un simple site.</h2>
+      <p class="s-lead">Chaque élément travaille avec les autres pour renforcer votre visibilité.</p>
+    </div>
+    <div class="eco reveal" id="eco">
+      <svg class="eco-lines" id="ecoLines" aria-hidden="true"></svg>
+      <div class="eco-center" id="ecoCenter"><span class="lg">M13</span><small>Menuiseries</small></div>
+      <div class="eco-nodes" id="ecoNodes">
+        <div class="eco-node"><i class="fa-solid fa-globe"></i> Site internet</div>
+        <div class="eco-node"><i class="fa-brands fa-google"></i> Google Business</div>
+        <div class="eco-node"><i class="fa-solid fa-star"></i> Avis clients</div>
+        <div class="eco-node"><i class="fa-solid fa-images"></i> Réalisations</div>
+        <div class="eco-node"><i class="fa-solid fa-location-dot"></i> Pages locales</div>
+        <div class="eco-node"><i class="fa-solid fa-pen-nib"></i> Blog conseils</div>
+        <div class="eco-node"><i class="fa-solid fa-magnifying-glass-chart"></i> SEO local</div>
+        <div class="eco-node"><i class="fa-solid fa-share-nodes"></i> Réseaux sociaux</div>
+        <div class="eco-node"><i class="fa-solid fa-arrows-rotate"></i> Suivi mensuel</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 · LE SITE INTERNET ============ -->
+<section class="section white" id="site">
+  <div class="wrap split">
+    <div class="reveal">
+      <span class="eyebrow">La fondation</span>
+      <h2 class="s-title">Le site internet.</h2>
+      <p class="s-lead">Tout part de là. Une base solide, pensée pour transformer un visiteur en demande de devis.</p>
+      <div class="mini-feats">
+        <div class="mini-feat"><i class="fa-solid fa-wand-magic-sparkles"></i> Design professionnel</div>
+        <div class="mini-feat"><i class="fa-solid fa-mobile-screen"></i> Mobile first</div>
+        <div class="mini-feat"><i class="fa-solid fa-bolt"></i> Rapide</div>
+        <div class="mini-feat"><i class="fa-solid fa-shield-halved"></i> Rassurant</div>
+        <div class="mini-feat"><i class="fa-solid fa-file-signature"></i> Optimisé pour les devis</div>
+      </div>
+    </div>
+    <div class="browser reveal">
+      <div class="browser-bar"><span style="background:#ED6A5E"></span><span style="background:#F4BF50"></span><span style="background:#61C554"></span><span class="u">m13-menuiseries.fr</span></div>
+      <div class="browser-body"><div class="bh"></div><div class="bt"></div><div class="bt s"></div><div class="bbtn"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6 · GOOGLE ============ -->
+<section class="section sand" id="google">
+  <div class="wrap center">
+    <div class="reveal">
+      <span class="eyebrow">Google</span>
+      <h2 class="s-title">D'une recherche à un contact.</h2>
+      <p class="s-lead">L'objectif est de transformer une recherche en demande de devis.</p>
+    </div>
+    <div class="funnel">
+      <div class="funnel-step reveal"><span class="n">1</span><b>Recherche sur Google</b></div>
+      <div class="funnel-arrow reveal"><i class="fa-solid fa-arrow-down"></i></div>
+      <div class="funnel-step reveal"><span class="n">2</span><b>Découverte de M13</b></div>
+      <div class="funnel-arrow reveal"><i class="fa-solid fa-arrow-down"></i></div>
+      <div class="funnel-step reveal"><span class="n">3</span><b>Visite du site</b></div>
+      <div class="funnel-arrow reveal"><i class="fa-solid fa-arrow-down"></i></div>
+      <div class="funnel-step reveal"><span class="n">4</span><b>Consultation des réalisations</b></div>
+      <div class="funnel-arrow reveal"><i class="fa-solid fa-arrow-down"></i></div>
+      <div class="funnel-step win reveal"><span class="n"><i class="fa-solid fa-check"></i></span><b>Demande de devis</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7 · PAGES ESSENTIELLES ============ -->
+<section class="section white" id="pages">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">Architecture du site</span>
+      <h2 class="s-title">Les pages essentielles.</h2>
+    </div>
+    <div class="pgroup reveal">
+      <h3><i class="fa-solid fa-sitemap"></i> Pages principales</h3>
+      <div class="chips">
+        <span class="chip">Accueil</span><span class="chip">Prestations</span><span class="chip">Réalisations</span><span class="chip">À propos</span><span class="chip">Contact</span><span class="chip">Aides &amp; financements</span><span class="chip">Mentions légales</span><span class="chip">Confidentialité</span>
+      </div>
+    </div>
+    <div class="pgroup reveal">
+      <h3><i class="fa-solid fa-layer-group"></i> Pages prestations</h3>
+      <div class="chips">
+        <span class="chip">Fenêtres PVC</span><span class="chip">Fenêtres aluminium</span><span class="chip">Baies vitrées</span><span class="chip">Volets roulants</span><span class="chip">Stores bannes</span><span class="chip">Portes d'entrée</span><span class="chip">Climatisation</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8 · PAGES LOCALES SEO ============ -->
+<section class="section dark" id="locales">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">SEO local</span>
+      <h2 class="s-title">Une page par ville + prestation.</h2>
+      <p class="s-lead">Pour apparaître quand un client cherche un service précis dans sa commune.</p>
+    </div>
+    <div class="pgroup reveal">
+      <div class="chips">
+        <span class="chip geo">Menuisier Marseille</span><span class="chip geo">Fenêtres PVC Marseille</span><span class="chip geo">Volets roulants Marseille</span><span class="chip geo">Climatisation Marseille</span><span class="chip geo">Menuisier Aubagne</span><span class="chip geo">Menuisier Cassis</span><span class="chip geo">Menuisier Allauch</span>
+      </div>
+    </div>
+    <p class="keymsg reveal">Ces pages ne sont pas toutes dans le menu, mais reliées intelligemment pour aider Google à comprendre vos zones d'intervention.</p>
+  </div>
+</section>
+
+<!-- ============ 9 · BLOG / CONSEILS ============ -->
+<section class="section" id="blog">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">Blog &amp; conseils</span>
+      <h2 class="s-title">Attirer ceux qui se renseignent.</h2>
+    </div>
+    <div class="cards">
+      <article class="card reveal"><span class="tag">Guide</span><h3>PVC ou aluminium : que choisir ?</h3><p>Le comparatif clair pour aider à décider.</p></article>
+      <article class="card reveal"><span class="tag">Prix</span><h3>Le prix d'une baie vitrée</h3><p>Les fourchettes et ce qui fait varier le devis.</p></article>
+      <article class="card reveal"><span class="tag">Conseil</span><h3>Quand remplacer ses fenêtres ?</h3><p>Les signes qui ne trompent pas.</p></article>
+      <article class="card reveal"><span class="tag">Aides</span><h3>Quelles aides pour ses menuiseries ?</h3><p>MaPrimeRénov', TVA réduite, primes CEE.</p></article>
+      <article class="card reveal"><span class="tag">Entretien</span><h3>Entretenir ses volets roulants</h3><p>Les bons réflexes pour les faire durer.</p></article>
+    </div>
+    <p class="keymsg reveal">Les articles créent de la confiance avant même le premier appel.</p>
+  </div>
+</section>
+
+<!-- ============ 10 · GOOGLE BUSINESS PROFILE ============ -->
+<section class="section white" id="gbp">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">Google Business Profile</span>
+      <h2 class="s-title">La fiche qui vous fait appeler.</h2>
+      <p class="s-lead">C'est souvent le premier contact avec un client. On l'optimise et on l'anime.</p>
+    </div>
+    <div class="gbp-grid">
+      <div class="gbp-item reveal"><i class="fa-solid fa-sliders"></i> Optimisation de la fiche</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-camera"></i> Ajout de photos</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-star"></i> Récolte d'avis</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-reply"></i> Réponses aux avis</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-bullhorn"></i> Publications régulières</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-phone-volume"></i> Suivi des appels et clics</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 · SUIVI MENSUEL ============ -->
+<section class="section dark" id="suivi">
+  <div class="wrap center">
+    <div class="reveal">
+      <span class="eyebrow">Suivi mensuel</span>
+      <h2 class="s-title">Le site n'est pas figé.</h2>
+      <p class="s-lead">Chaque mois, on le renforce. Il devient plus fort, pas plus vieux.</p>
+    </div>
+    <div class="month">
+      <div class="gbp-item reveal"><i class="fa-solid fa-images"></i> Nouvelles réalisations</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-pen-nib"></i> Publication d'articles</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-location-dot"></i> Création de pages locales</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-magnifying-glass-chart"></i> Optimisations SEO</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-chart-line"></i> Suivi des performances</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-file-lines"></i> Rapport simple</div>
+      <div class="gbp-item reveal"><i class="fa-solid fa-arrows-rotate"></i> Ajustements continus</div>
+    </div>
+    <p class="keymsg reveal">Le site devient plus fort mois après mois.</p>
+  </div>
+</section>
+
+<!-- ============ 12 · ÉVOLUTION ============ -->
+<section class="section" id="evolution" style="background:var(--navy-2);color:#fff">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow" style="color:#F0B775">L'évolution</span>
+      <h2 class="s-title" style="color:#fff">Un travail progressif.</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-row reveal"><div class="tl-when">Mois 1</div><div class="tl-card"><b>Fondation</b><span>Le site, la fiche Google et les bases SEO sont en place.</span></div></div>
+      <div class="tl-row reveal"><div class="tl-when">Mois 3</div><div class="tl-card"><b>Premiers signaux</b><span>Les premières pages remontent, la fiche gagne en avis.</span></div></div>
+      <div class="tl-row reveal"><div class="tl-when">Mois 6</div><div class="tl-card"><b>Visibilité qui progresse</b><span>Plus de pages positionnées, plus de visites locales.</span></div></div>
+      <div class="tl-row reveal"><div class="tl-when">Mois 12</div><div class="tl-card"><b>Présence locale solide</b><span>Une présence installée sur vos services et vos communes.</span></div></div>
+    </div>
+    <p class="disclaimer reveal"><i class="fa-solid fa-circle-info"></i> Le référencement est un travail progressif. On ne promet jamais la première position Google : l'objectif est d'améliorer durablement votre visibilité locale.</p>
+  </div>
+</section>
+
+<!-- ============ 13 · CE QUE VOUS ACHETEZ ============ -->
+<section class="section" id="comparatif">
+  <div class="wrap center">
+    <div class="reveal">
+      <span class="eyebrow">La vraie différence</span>
+      <h2 class="s-title">Ce que vous achetez réellement.</h2>
+    </div>
+    <div class="compare" style="text-align:left">
+      <div class="comp basic reveal">
+        <span class="tagline">L'offre classique</span>
+        <h3>Un simple site internet</h3>
+        <ul>
+          <li><i class="fa-solid fa-xmark"></i> Livré une fois</li>
+          <li><i class="fa-solid fa-xmark"></i> Rarement mis à jour</li>
+          <li><i class="fa-solid fa-xmark"></i> Visibilité limitée</li>
+        </ul>
+      </div>
+      <div class="comp full reveal">
+        <span class="tagline">Notre offre</span>
+        <h3>Une présence digitale complète</h3>
+        <ul>
+          <li><i class="fa-solid fa-check"></i> Site professionnel</li>
+          <li><i class="fa-solid fa-check"></i> Google &amp; SEO local</li>
+          <li><i class="fa-solid fa-check"></i> Avis &amp; réalisations</li>
+          <li><i class="fa-solid fa-check"></i> Contenus &amp; pages locales</li>
+          <li><i class="fa-solid fa-check"></i> Suivi &amp; optimisations</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14 · CONCLUSION ============ -->
+<section class="section dark final" id="fin">
+  <div class="wrap reveal">
+    <h2>Votre métier est de réaliser des chantiers de qualité.<br />Le nôtre est de faire en sorte que les <em>bons clients vous trouvent</em>.</h2>
+    <a href="https://lupo1313.github.io/m13-menuiseries/" class="btn btn-amber">Lancer la stratégie <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</section>
+
+<a href="#hero" class="top" id="top" aria-label="Retour en haut"><i class="fa-solid fa-arrow-up"></i></a>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------- Reveal au scroll (avec léger décalage) ---------- */
+  var reveals = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          var el = en.target;
+          var sibs = Array.prototype.slice.call(el.parentElement.querySelectorAll(':scope > .reveal'));
+          var idx = sibs.indexOf(el);
+          el.style.transitionDelay = (idx>0 ? Math.min(idx*70,350) : 0) + 'ms';
+          el.classList.add('in');
+          io.unobserve(el);
+        }
+      });
+    }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  /* ---------- Barre de progression + nav + back-to-top ---------- */
+  var progress = document.getElementById('progress');
+  var nav = document.getElementById('nav');
+  var top = document.getElementById('top');
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var y = window.scrollY;
+    progress.style.width = (h>0 ? (y/h)*100 : 0) + '%';
+    nav.classList.toggle('show', y > window.innerHeight*0.75);
+    top.classList.toggle('show', y > window.innerHeight);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* ---------- Diagramme d'écosystème : radial sur desktop ---------- */
+  var eco = document.getElementById('eco');
+  var ecoLines = document.getElementById('ecoLines');
+  var ecoNodes = Array.prototype.slice.call(document.querySelectorAll('#ecoNodes .eco-node'));
+  function layoutEco(){
+    if(!eco) return;
+    var wide = window.innerWidth >= 780;
+    eco.classList.toggle('eco--radial', wide);
+    if(!wide){
+      ecoLines.innerHTML = '';
+      ecoNodes.forEach(function(n){ n.style.left=''; n.style.top=''; });
+      return;
+    }
+    var w = eco.clientWidth, hgt = eco.clientHeight;
+    var cx = w/2, cy = hgt/2;
+    var R = Math.min(w, hgt)/2 - 96;
+    ecoLines.setAttribute('viewBox', '0 0 ' + w + ' ' + hgt);
+    var lines = '';
+    var total = ecoNodes.length;
+    ecoNodes.forEach(function(n, i){
+      var ang = (-90 + i*(360/total)) * Math.PI/180;
+      var x = cx + R*Math.cos(ang);
+      var y = cy + R*Math.sin(ang);
+      n.style.left = x + 'px';
+      n.style.top = y + 'px';
+      n.style.transform = 'translate(-50%,-50%)';
+      lines += '<line x1="'+cx+'" y1="'+cy+'" x2="'+x+'" y2="'+y+'"></line>';
+    });
+    ecoLines.innerHTML = lines;
+  }
+  layoutEco();
+  window.addEventListener('resize', function(){ clearTimeout(window.__ecoT); window.__ecoT = setTimeout(layoutEco, 120); });
+  window.addEventListener('load', layoutEco);
+})();
+</script>
+</body>
+</html>
