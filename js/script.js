@@ -230,11 +230,11 @@
     const fanDotsWrap = document.getElementById('fanDots');
     const fanData = [
       { t: 'Fenêtres PVC & aluminium', d: 'Double vitrage sur-mesure, isolation thermique et phonique. Dépose et pose comprises.' },
-      { t: 'Volets roulants solaires', d: 'Motorisés, autonomes, sans gros travaux ni câblage à tirer. Confort et sécurité au quotidien.' },
+      { t: 'Volets roulants', d: 'Manuels ou motorisés, posés proprement. Confort, sécurité et obscurité au quotidien.' },
       { t: 'Stores bannes', d: 'Protection solaire pour vos terrasses et balcons. Toile, coloris et motorisation au choix.' },
       { t: "Portes d'entrée", d: 'Sécurité renforcée, isolation et style. Aluminium ou PVC, sur-mesure, adaptées à votre façade.' },
       { t: 'Garde-corps en verre', d: 'Verre sécurisé, fixations discrètes et finitions propres pour une vue dégagée.' },
-      { t: 'Climatisation réversible', d: 'Installation et entretien de splits. Chaud l’hiver, frais l’été, toute l’année.' }
+      { t: 'Baies vitrées & vérandas', d: 'Grandes ouvertures coulissantes en aluminium pour faire entrer la lumière. Pose sur-mesure.' }
     ];
     const POS = [
       { rot: 0, sc: 1, x: 0, y: 0, z: 10 },
@@ -346,5 +346,108 @@
     let revTimer = setInterval(function () { revGo(revIdx + 1); }, 6000);
     revVp.addEventListener('pointerenter', function () { clearInterval(revTimer); });
     revVp.addEventListener('pointerdown', function () { clearInterval(revTimer); });
+  }
+
+  /* ---------- Lightbox (galeries) ---------- */
+  const lbGroups = document.querySelectorAll('.js-lightbox');
+  if (lbGroups.length) {
+    // Construction du modal (une seule fois)
+    const lb = document.createElement('div');
+    lb.className = 'lightbox';
+    lb.setAttribute('role', 'dialog');
+    lb.setAttribute('aria-modal', 'true');
+    lb.setAttribute('aria-label', 'Image agrandie');
+    lb.innerHTML =
+      '<button class="lb-close" aria-label="Fermer">&times;</button>' +
+      '<button class="lb-nav lb-prev" aria-label="Image précédente"><i class="fa-solid fa-chevron-left"></i></button>' +
+      '<figure class="lb-figure"><img class="lb-img" alt="" /><figcaption class="lb-cap"></figcaption></figure>' +
+      '<button class="lb-nav lb-next" aria-label="Image suivante"><i class="fa-solid fa-chevron-right"></i></button>';
+    document.body.appendChild(lb);
+    const lbImg = lb.querySelector('.lb-img');
+    const lbCap = lb.querySelector('.lb-cap');
+    const lbClose = lb.querySelector('.lb-close');
+    const lbPrev = lb.querySelector('.lb-prev');
+    const lbNext = lb.querySelector('.lb-next');
+    let lbItems = [];
+    let lbIdx = 0;
+    let lbLastFocus = null;
+
+    function lbShow(i) {
+      lbIdx = (i + lbItems.length) % lbItems.length;
+      const el = lbItems[lbIdx];
+      lbImg.src = el.getAttribute('data-full');
+      lbImg.alt = el.getAttribute('data-caption') || '';
+      lbCap.textContent = el.getAttribute('data-caption') || '';
+      const multi = lbItems.length > 1;
+      lbPrev.style.display = multi ? '' : 'none';
+      lbNext.style.display = multi ? '' : 'none';
+    }
+    function lbOpen(group, el) {
+      lbItems = Array.prototype.slice.call(group.querySelectorAll('[data-full]'))
+        .filter(function (n) { return n.offsetParent !== null; }); // ignore les éléments filtrés/masqués
+      if (!lbItems.length) lbItems = [el];
+      lbLastFocus = document.activeElement;
+      lbShow(lbItems.indexOf(el));
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      lbClose.focus();
+    }
+    function lbHide() {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+      lbImg.src = '';
+      if (lbLastFocus && lbLastFocus.focus) lbLastFocus.focus();
+    }
+
+    lbGroups.forEach(function (group) {
+      group.addEventListener('click', function (e) {
+        const el = e.target.closest('[data-full]');
+        if (el && group.contains(el)) { e.preventDefault(); lbOpen(group, el); }
+      });
+      group.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const el = e.target.closest('[data-full]');
+        if (el && group.contains(el)) { e.preventDefault(); lbOpen(group, el); }
+      });
+    });
+
+    lbClose.addEventListener('click', lbHide);
+    lbPrev.addEventListener('click', function () { lbShow(lbIdx - 1); });
+    lbNext.addEventListener('click', function () { lbShow(lbIdx + 1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb || e.target.classList.contains('lb-figure')) lbHide(); });
+    document.addEventListener('keydown', function (e) {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') lbHide();
+      else if (e.key === 'ArrowLeft') lbShow(lbIdx - 1);
+      else if (e.key === 'ArrowRight') lbShow(lbIdx + 1);
+    });
+    // Swipe mobile
+    let lbX = null;
+    lb.addEventListener('touchstart', function (e) { lbX = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', function (e) {
+      if (lbX === null) return;
+      const dx = e.changedTouches[0].clientX - lbX;
+      if (Math.abs(dx) > 50 && lbItems.length > 1) lbShow(lbIdx + (dx < 0 ? 1 : -1));
+      lbX = null;
+    }, { passive: true });
+  }
+
+  /* ---------- Filtres réalisations ---------- */
+  const filterBar = document.querySelector('.filter-bar');
+  if (filterBar) {
+    const btns = filterBar.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.filter-item');
+    filterBar.addEventListener('click', function (e) {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      btns.forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      const f = btn.dataset.filter;
+      items.forEach(function (it) {
+        const show = f === 'all' || (it.dataset.cat || '').split(' ').indexOf(f) !== -1;
+        it.style.display = show ? '' : 'none';
+      });
+    });
   }
 })();

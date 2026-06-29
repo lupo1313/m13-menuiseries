@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lupo1313.github.io/m13-menuiseries/sitemap.xml
