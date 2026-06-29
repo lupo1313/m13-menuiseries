@@ -485,9 +485,16 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.08;col
    AJOUTS — refonte M13 (logo, pourquoi, lightbox, pages, etc.)
    ============================================================ */
 
-/* ---------- Logo image (prêt pour le PNG fourni) ---------- */
-.brand img{height:46px;width:auto;display:block}
-.site-footer .brand img{height:54px}
+/* ---------- Logo image ---------- */
+.brand-logo{height:46px;width:auto;display:block}
+/* Header : blanc au-dessus du hero, couleur une fois le header scrollé (fond clair) */
+.brand .logo-full.logo-light{display:block}
+.brand .logo-full.logo-dark{display:none}
+.brand .logo-compact{display:none}
+.scrolled .brand .logo-full.logo-light{display:none}
+.scrolled .brand .logo-full.logo-dark{display:block}
+/* Footer (fond sombre) : logo blanc */
+.footer-logo img{height:60px;width:auto;display:block}
 
 /* ---------- CTA de section ---------- */
 .section-cta{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-top:clamp(2.4rem,5vw,3.4rem)}
@@ -574,6 +581,14 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.08;col
   .info-grid{grid-template-columns:repeat(3,1fr)}
 }
 @media(max-width:768px){
+  /* Logo compact sur mobile */
+  .brand-logo{height:40px}
+  .brand .logo-full{display:none!important}
+  .brand .logo-compact.logo-light{display:block}
+  .brand .logo-compact.logo-dark{display:none}
+  .scrolled .brand .logo-compact.logo-light{display:none}
+  .scrolled .brand .logo-compact.logo-dark{display:block}
+  .footer-logo img{height:54px}
   .presta{grid-template-columns:1fr;gap:1.4rem}
   .presta:nth-of-type(even) .presta-media{order:0}
   .why-grid{grid-template-columns:1fr 1fr}
