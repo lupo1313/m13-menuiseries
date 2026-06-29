@@ -317,7 +317,8 @@
       { t: 'Stores bannes', d: 'Protection solaire pour vos terrasses et balcons. Toile, coloris et motorisation au choix.' },
       { t: "Portes d'entrée", d: 'Sécurité renforcée, isolation et style. Aluminium ou PVC, sur-mesure, adaptées à votre façade.' },
       { t: 'Garde-corps en verre', d: 'Verre sécurisé, fixations discrètes et finitions propres pour une vue dégagée.' },
-      { t: 'Baies vitrées & vérandas', d: 'Grandes ouvertures coulissantes en aluminium pour faire entrer la lumière. Pose sur-mesure.' }
+      { t: 'Baies vitrées & vérandas', d: 'Grandes ouvertures coulissantes en aluminium pour faire entrer la lumière. Pose sur-mesure.' },
+      { t: 'Climatisation réversible', d: 'Installation de climatisation réversible (splits) pour rester au frais l’été et au chaud l’hiver.' }
     ];
     const POS = [
       { rot: 0, sc: 1, x: 0, y: 0, z: 10 },
