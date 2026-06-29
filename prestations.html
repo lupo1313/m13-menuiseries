@@ -49,12 +49,27 @@
       <img class="brand-logo logo-compact logo-dark" src="assets/logo/m13-logo-horizontal-compact-couleur.png" width="909" height="178" alt="" />
     </a>
     <nav class="nav-menu" id="navMenu" aria-label="Navigation principale">
-      <a href="index.html">Accueil</a>
-      <a href="prestations.html" aria-current="page">Prestations</a>
-      <a href="realisations.html">Réalisations</a>
-      <a href="pourquoi.html">Pourquoi nous</a>
+      <div class="nav-mobile-head">
+        <img class="nav-logo" src="assets/logo/m13-logo-horizontal-blanc.png" width="1081" height="268" alt="M13 Menuiseries" />
+        <button class="nav-close" id="navClose" type="button" aria-label="Fermer le menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      </div>
+      <a href="index.html" data-nav="index">Accueil</a>
+      <div class="nav-group" id="navGroup">
+        <button class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="navSubPresta" data-nav="prestations" aria-current="page">Prestations <i class="fa-solid fa-chevron-down nav-caret" aria-hidden="true"></i></button>
+        <div class="nav-submenu" id="navSubPresta">
+          <a href="prestations.html#fenetres">Fenêtres</a>
+          <a href="prestations.html#volets">Volets roulants</a>
+          <a href="prestations.html#portes">Portes</a>
+          <a href="prestations.html#stores">Stores bannes</a>
+          <a href="prestations.html#garde-corps">Garde-corps</a>
+          <a href="prestations.html#climatisation">Climatisation</a>
+          <a href="prestations.html">Toutes les prestations</a>
+        </div>
+      </div>
+      <a href="realisations.html" data-nav="realisations">Réalisations</a>
+      <a href="pourquoi.html" data-nav="pourquoi">Pourquoi nous</a>
       <a href="index.html#avis">Avis</a>
-      <a href="contact.html" class="nav-cta">Devis gratuit</a>
+      <a href="contact.html" class="nav-cta" data-nav="contact">Devis gratuit</a>
     </nav>
     <div class="header-actions">
       <a href="tel:+33612345678" class="header-phone">
@@ -78,7 +93,7 @@
       </nav>
       <span class="eyebrow eyebrow-light">Nos prestations</span>
       <h1>Un menuisier marseillais pour tous vos projets</h1>
-      <p class="lead">De la fenêtre sur-mesure au garde-corps en verre, chaque pose est réalisée proprement, par un seul interlocuteur, à Marseille et dans un rayon de 30 km.</p>
+      <p class="lead">De la fenêtre sur-mesure au garde-corps en verre, chaque pose est réalisée proprement, par un seul interlocuteur, à Marseille et dans un rayon d'environ 100 km.</p>
     </div>
   </section>
 
@@ -202,40 +217,43 @@
       <a href="index.html" class="brand brand-light footer-logo" aria-label="M13 Menuiseries, accueil">
         <img src="assets/logo/m13-logo-horizontal-blanc.png" width="1081" height="268" alt="M13 Menuiseries" />
       </a>
-      <p>Artisan menuisier à Marseille. Fenêtres, volets, portes et garde-corps sur-mesure. Travail soigné, devis gratuit, intervention rapide.</p>
+      <p>Artisan menuisier à Marseille, M13 Menuiseries intervient pour vos projets de fenêtres, volets, portes, stores bannes, garde-corps, agencements et climatisation.</p>
       <div class="footer-social">
         <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
         <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
       </div>
     </div>
     <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="index.html">Accueil</a>
+      <a href="prestations.html">Prestations</a>
+      <a href="realisations.html">Réalisations</a>
+      <a href="pourquoi.html">Pourquoi M13</a>
+      <a href="contact.html">Devis / Contact</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="politique-confidentialite.html">Politique de confidentialité</a>
+    </div>
+    <div class="footer-col">
       <h4>Prestations</h4>
       <a href="prestations.html#fenetres">Fenêtres</a>
       <a href="prestations.html#volets">Volets roulants</a>
+      <a href="prestations.html#portes">Portes</a>
       <a href="prestations.html#stores">Stores bannes</a>
       <a href="prestations.html#garde-corps">Garde-corps verre</a>
-      <a href="prestations.html">Toutes les prestations</a>
-    </div>
-    <div class="footer-col">
-      <h4>Navigation</h4>
-      <a href="realisations.html">Réalisations</a>
-      <a href="pourquoi.html">Pourquoi nous</a>
-      <a href="index.html#avis">Avis</a>
-      <a href="contact.html">Devis gratuit</a>
-      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="prestations.html#climatisation">Climatisation</a>
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
       <a href="tel:+33612345678"><i class="fa-solid fa-phone" aria-hidden="true"></i> 06 12 34 56 78</a>
       <a href="mailto:contact@m13-menuiseries.fr"><i class="fa-solid fa-envelope" aria-hidden="true"></i> contact@m13-menuiseries.fr</a>
-      <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> 14 Traverse de la Passerelle, 13014 Marseille</p>
+      <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Marseille et jusqu'à 100&nbsp;km autour</p>
       <p><i class="fa-solid fa-clock" aria-hidden="true"></i> Lun. au sam., 8h&nbsp;-&nbsp;19h</p>
     </div>
   </div>
   <div class="footer-bottom">
     <div class="container footer-bottom-inner">
       <span>© 2026 M13 Menuiseries · KAOUMI José. Tous droits réservés.</span>
-      <span><a href="mentions-legales.html">Mentions légales</a> · Artisan menuisier à Marseille</span>
+      <span><a href="mentions-legales.html">Mentions légales</a> · <a href="politique-confidentialite.html">Politique de confidentialité</a> · Site web conçu par Fabien Lopez Oanes</span>
     </div>
   </div>
 </footer>

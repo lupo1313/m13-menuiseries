@@ -19,21 +19,64 @@
   /* ---------- Menu mobile ---------- */
   const navToggle = document.getElementById('navToggle');
   const navMenu = document.getElementById('navMenu');
+  const navClose = document.getElementById('navClose');
+  const navGroupToggle = navMenu ? navMenu.querySelector('.nav-group-toggle') : null;
+  const navGroup = document.getElementById('navGroup');
+  const isMobileNav = function () { return window.matchMedia('(max-width:768px)').matches; };
+
+  // Voile sombre derrière le panneau mobile (cliquable pour fermer)
+  let navScrim = null;
+  if (navMenu) {
+    navScrim = document.createElement('div');
+    navScrim.className = 'nav-scrim';
+    document.body.appendChild(navScrim);
+    navScrim.addEventListener('click', function () { closeMenu(); });
+  }
 
   function closeMenu() {
     navToggle.classList.remove('open');
     navMenu.classList.remove('open');
     navToggle.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    if (navScrim) navScrim.classList.remove('show');
+    if (navGroup) navGroup.classList.remove('open');
+    if (navGroupToggle) navGroupToggle.setAttribute('aria-expanded', 'false');
   }
   navToggle.addEventListener('click', function () {
     const open = navMenu.classList.toggle('open');
     navToggle.classList.toggle('open', open);
     navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     document.body.style.overflow = open ? 'hidden' : '';
+    if (navScrim) navScrim.classList.toggle('show', open);
   });
+  if (navClose) navClose.addEventListener('click', closeMenu);
+
+  // Liens (hors bouton de groupe) ferment le menu
   navMenu.querySelectorAll('a').forEach(function (a) {
     a.addEventListener('click', closeMenu);
+  });
+
+  // Onglet "Prestations" : sous-menu repliable sur mobile, lien direct sur desktop
+  if (navGroupToggle && navGroup) {
+    navGroupToggle.addEventListener('click', function () {
+      if (isMobileNav()) {
+        const open = navGroup.classList.toggle('open');
+        navGroupToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      } else {
+        window.location.href = 'prestations.html';
+      }
+    });
+  }
+
+  // Fermeture au clic en dehors du panneau
+  document.addEventListener('click', function (e) {
+    if (!navMenu.classList.contains('open')) return;
+    if (navMenu.contains(e.target) || navToggle.contains(e.target)) return;
+    closeMenu();
+  });
+  // Fermeture à la touche Échap
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && navMenu.classList.contains('open')) closeMenu();
   });
 
   /* ---------- Reveal au scroll (avec léger décalage) ---------- */
@@ -181,13 +224,53 @@
     });
     dNext.addEventListener('click', function () { if (dValid() && dCur < dTotal - 1) { dCur++; dRender(); } });
     dBack.addEventListener('click', function () { if (dCur > 0) { dCur--; dRender(); } });
-    dForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (!dValid()) return;
+    // Adresse de réception des demandes.
+    // TODO : remplacer par contact@m13-menuiseries.fr (ou devis@…) une fois le domaine email configuré.
+    const DEVIS_EMAIL = 'flopezoanes@gmail.com';
+
+    function dShowSuccess() {
       dForm.style.display = 'none';
       wrap.querySelector('.devis-progress').style.display = 'none';
       wrap.querySelector('.devis-steps-head').style.display = 'none';
       document.getElementById('devisSuccess').hidden = false;
+    }
+    function dVal(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+    dForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!dValid()) return;
+      // Honeypot anti-spam : si rempli, on simule un succès sans rien envoyer.
+      const hp = dForm.querySelector('.hp-field');
+      if (hp && hp.value) { dShowSuccess(); return; }
+
+      const errEl = document.getElementById('devisError');
+      if (errEl) errEl.hidden = true;
+      dSubmit.disabled = true;
+      const prev = dSubmit.innerHTML;
+      dSubmit.innerHTML = 'Envoi…';
+
+      const fd = new FormData();
+      fd.append('Projet', dProjet.value || 'Non précisé');
+      fd.append('Nom', dVal('nom'));
+      fd.append('Téléphone', dVal('tel'));
+      fd.append('Email', dVal('email'));
+      fd.append('Ville', dVal('ville'));
+      fd.append('Message', dVal('message'));
+      fd.append('_subject', 'Nouvelle demande de devis — M13 Menuiseries');
+      fd.append('_captcha', 'false');
+      fd.append('_template', 'table');
+
+      fetch('https://formsubmit.co/ajax/' + DEVIS_EMAIL, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: fd
+      }).then(function (r) { return r.ok ? r.json().catch(function () { return {}; }) : Promise.reject(); })
+        .then(function () { dShowSuccess(); })
+        .catch(function () {
+          dSubmit.disabled = false;
+          dSubmit.innerHTML = prev;
+          if (errEl) errEl.hidden = false;
+        });
     });
     dRender();
   }

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Menuisier à Marseille · Fenêtres, volets, portes & garde-corps | M13 Menuiseries</title>
-<meta name="description" content="M13 Menuiseries, artisan menuisier à Marseille. Pose de fenêtres, volets roulants, portes, stores bannes, garde-corps en verre et baies vitrées sur-mesure. Travail soigné, devis gratuit sous 48 h. Marseille et 30 km à la ronde." />
+<meta name="description" content="M13 Menuiseries, artisan menuisier à Marseille. Pose de fenêtres, volets roulants, portes, stores bannes, garde-corps en verre et baies vitrées sur-mesure. Travail soigné, devis gratuit sous 48 h. Marseille et jusqu'à 100 km autour." />
 <link rel="canonical" href="https://lupo1313.github.io/m13-menuiseries/" />
 <meta name="robots" content="index, follow" />
 <meta name="author" content="M13 Menuiseries" />
@@ -50,34 +50,26 @@
   "priceRange": "€€",
   "foundingDate": "2022-03-18",
   "naics": "43.32A",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "14 Traverse de la Passerelle",
-    "addressLocality": "Marseille",
-    "postalCode": "13014",
-    "addressRegion": "Provence-Alpes-Côte d'Azur",
-    "addressCountry": "FR"
+  "areaServed": {
+    "@type": "GeoCircle",
+    "geoMidpoint": { "@type": "GeoCoordinates", "latitude": 43.2965, "longitude": 5.3698 },
+    "geoRadius": "100000",
+    "description": "Marseille et jusqu'à 100 km autour"
   },
-  "geo": { "@type": "GeoCoordinates", "latitude": 43.3339, "longitude": 5.4200 },
-  "areaServed": [
-    { "@type": "City", "name": "Marseille" },
-    { "@type": "City", "name": "Aubagne" },
-    { "@type": "City", "name": "Gémenos" },
-    { "@type": "City", "name": "La Ciotat" },
-    { "@type": "City", "name": "Cassis" }
-  ],
   "openingHoursSpecification": [{
     "@type": "OpeningHoursSpecification",
     "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
     "opens": "08:00",
     "closes": "19:00"
   }],
-  "knowsAbout": ["Pose de fenêtres", "Volets roulants", "Portes d'entrée", "Stores bannes", "Garde-corps en verre", "Baies vitrées", "Menuiserie sur-mesure"],
+  "knowsAbout": ["Pose de fenêtres", "Volets roulants", "Portes d'entrée", "Stores bannes", "Garde-corps en verre", "Baies vitrées", "Menuiserie intérieure", "Menuiserie extérieure", "Climatisation", "Menuiserie sur-mesure"],
   "makesOffer": [
     { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Pose de fenêtres sur-mesure" } },
     { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Pose de volets roulants" } },
     { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Pose de portes d'entrée" } },
-    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Garde-corps en verre" } }
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Stores bannes" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Garde-corps en verre" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Pose de climatisation réversible" } }
   ]
 }
 </script>
@@ -97,12 +89,27 @@
     </a>
 
     <nav class="nav-menu" id="navMenu" aria-label="Navigation principale">
-      <a href="index.html">Accueil</a>
-      <a href="prestations.html">Prestations</a>
-      <a href="realisations.html">Réalisations</a>
-      <a href="pourquoi.html">Pourquoi nous</a>
+      <div class="nav-mobile-head">
+        <img class="nav-logo" src="assets/logo/m13-logo-horizontal-blanc.png" width="1081" height="268" alt="M13 Menuiseries" />
+        <button class="nav-close" id="navClose" type="button" aria-label="Fermer le menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      </div>
+      <a href="index.html" data-nav="index" aria-current="page">Accueil</a>
+      <div class="nav-group" id="navGroup">
+        <button class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="navSubPresta" data-nav="prestations">Prestations <i class="fa-solid fa-chevron-down nav-caret" aria-hidden="true"></i></button>
+        <div class="nav-submenu" id="navSubPresta">
+          <a href="prestations.html#fenetres">Fenêtres</a>
+          <a href="prestations.html#volets">Volets roulants</a>
+          <a href="prestations.html#portes">Portes</a>
+          <a href="prestations.html#stores">Stores bannes</a>
+          <a href="prestations.html#garde-corps">Garde-corps</a>
+          <a href="prestations.html#climatisation">Climatisation</a>
+          <a href="prestations.html">Toutes les prestations</a>
+        </div>
+      </div>
+      <a href="realisations.html" data-nav="realisations">Réalisations</a>
+      <a href="pourquoi.html" data-nav="pourquoi">Pourquoi nous</a>
       <a href="index.html#avis">Avis</a>
-      <a href="contact.html" class="nav-cta">Devis gratuit</a>
+      <a href="contact.html" class="nav-cta" data-nav="contact">Devis gratuit</a>
     </nav>
 
     <div class="header-actions">
@@ -127,7 +134,7 @@
     </div>
     <div class="container hero-inner">
       <div class="hero-content reveal">
-        <span class="eyebrow eyebrow-light">Artisan menuisier · Marseille et 30 km à la ronde</span>
+        <span class="eyebrow eyebrow-light">Artisan menuisier · Marseille et jusqu'à 100 km autour</span>
         <h1 class="hero-title">Vos fenêtres, volets et portes, posés avec un vrai souci du <em>détail</em>.</h1>
         <p class="hero-sub">Menuiseries sur-mesure posées avec un vrai savoir-faire, pour les particuliers comme les professionnels. Un seul interlocuteur et un devis gratuit sous 48&nbsp;h.</p>
         <div class="hero-actions">
@@ -147,7 +154,7 @@
             <div class="hr-photo"><img src="assets/img/realisation-fenetres-volets-marseille.webp" width="600" height="400" alt="Fenêtres et volets posés à Marseille par M13 Menuiseries" loading="lazy" /></div>
             <div class="hr-body">
               <div class="hr-top"><div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><strong>4,9/5</strong></div>
-              <p class="hr-quote">« Deux fenêtres changées en une matinée, travail nickel et très bon conseil. »</p>
+              <p class="hr-quote">« Deux fenêtres changées en une matinée, travail soigné et très bon conseil. »</p>
               <div class="hr-author"><span class="avatar">S</span><span>Sophie M.<small>Marseille 8<sup>e</sup></small></span></div>
             </div>
           </article>
@@ -155,7 +162,7 @@
             <div class="hr-photo"><img src="assets/img/service-volets-roulants.webp" width="600" height="400" alt="Volet roulant posé à Gémenos" loading="lazy" /></div>
             <div class="hr-body">
               <div class="hr-top"><div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><strong>4,9/5</strong></div>
-              <p class="hr-quote">« José a posé mes volets roulants nickel, ponctuel et de bon conseil. Rien à redire. »</p>
+              <p class="hr-quote">« José a posé mes volets roulants proprement, ponctuel et de bon conseil. Rien à redire. »</p>
               <div class="hr-author"><span class="avatar">K</span><span>Karim B.<small>Gémenos</small></span></div>
             </div>
           </article>
@@ -180,20 +187,20 @@
   <!-- ============ STATS ============ -->
   <section class="stats" aria-label="Chiffres clés">
     <div class="container stats-grid">
-      <div class="stat reveal">
-        <span class="stat-num"><span class="counter" data-target="48">0</span>h</span>
+      <div class="stat reveal" role="group" aria-label="Devis sous 48 heures">
+        <span class="stat-num" aria-hidden="true"><span class="counter" data-target="48">48</span>h</span>
         <span class="stat-label">pour recevoir votre devis</span>
       </div>
-      <div class="stat reveal">
-        <span class="stat-num"><span class="counter" data-target="30">0</span>km</span>
+      <div class="stat reveal" role="group" aria-label="Jusqu'à 100 km autour de Marseille">
+        <span class="stat-num" aria-hidden="true"><span class="counter" data-target="100">100</span>km</span>
         <span class="stat-label">autour de Marseille</span>
       </div>
-      <div class="stat reveal">
-        <span class="stat-num"><span class="counter" data-target="100">0</span>%</span>
+      <div class="stat reveal" role="group" aria-label="100 % déplacement et devis offerts">
+        <span class="stat-num" aria-hidden="true"><span class="counter" data-target="100">100</span>%</span>
         <span class="stat-label">déplacement &amp; devis offerts</span>
       </div>
-      <div class="stat reveal">
-        <span class="stat-num">2022</span>
+      <div class="stat reveal" role="group" aria-label="Artisan menuisier à Marseille depuis 2022">
+        <span class="stat-num" aria-hidden="true">2022</span>
         <span class="stat-label">artisan menuisier à Marseille depuis</span>
       </div>
     </div>
@@ -320,7 +327,7 @@
           <div class="tl-step reveal">
             <div class="tl-node"><i class="fa-solid fa-handshake-angle" aria-hidden="true"></i><span class="tl-num">4</span></div>
             <h3>Suivi &amp; finitions</h3>
-            <p>Je reste joignable après la pose et je repasse régler le moindre détail jusqu'à ce que tout soit nickel.</p>
+            <p>Je reste joignable après la pose et je repasse régler le moindre détail jusqu'à ce que tout soit parfaitement réglé.</p>
           </div>
         </div>
       </div>
@@ -335,14 +342,14 @@
       <span class="mq-item"><i class="fa-solid fa-user-check"></i> Un seul interlocuteur</span>
       <span class="mq-item"><i class="fa-solid fa-ruler-combined"></i> Pose sur-mesure</span>
       <span class="mq-item"><i class="fa-solid fa-bolt"></i> Intervention rapide</span>
-      <span class="mq-item"><i class="fa-solid fa-location-dot"></i> Marseille &amp; 30 km</span>
+      <span class="mq-item"><i class="fa-solid fa-location-dot"></i> Marseille &amp; 100 km</span>
       <span class="mq-item"><i class="fa-solid fa-users"></i> Particuliers &amp; professionnels</span>
       <span class="mq-item"><i class="fa-solid fa-circle-check"></i> Devis gratuit sous 48 h</span>
       <span class="mq-item"><i class="fa-solid fa-broom"></i> Chantier laissé propre</span>
       <span class="mq-item"><i class="fa-solid fa-user-check"></i> Un seul interlocuteur</span>
       <span class="mq-item"><i class="fa-solid fa-ruler-combined"></i> Pose sur-mesure</span>
       <span class="mq-item"><i class="fa-solid fa-bolt"></i> Intervention rapide</span>
-      <span class="mq-item"><i class="fa-solid fa-location-dot"></i> Marseille &amp; 30 km</span>
+      <span class="mq-item"><i class="fa-solid fa-location-dot"></i> Marseille &amp; 100 km</span>
       <span class="mq-item"><i class="fa-solid fa-users"></i> Particuliers &amp; professionnels</span>
     </div>
   </div>
@@ -360,32 +367,32 @@
         <article class="why-card reveal">
           <span class="why-ico"><i class="fa-solid fa-user-check" aria-hidden="true"></i></span>
           <h3>Un seul interlocuteur</h3>
-          <p>Vous échangez avec la même personne du devis à la pose. Pas d'intermédiaire, pas de sous-traitance.</p>
+          <p>Du premier appel à la pose, vous parlez toujours à la même personne. Sans intermédiaire.</p>
         </article>
         <article class="why-card reveal">
           <span class="why-ico"><i class="fa-solid fa-comments" aria-hidden="true"></i></span>
-          <h3>Des conseils adaptés</h3>
-          <p>Je vous oriente vers la solution réellement utile à votre logement, sans vous vendre l'inutile.</p>
+          <h3>Des conseils sur-mesure</h3>
+          <p>Une solution adaptée à votre logement et à votre budget, jamais du superflu.</p>
         </article>
         <article class="why-card reveal">
-          <span class="why-ico"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i></span>
-          <h3>Une pose soignée</h3>
-          <p>Mesures précises, pose dans les règles et finitions propres. Le souci du détail à chaque étape.</p>
-        </article>
-        <article class="why-card reveal">
-          <span class="why-ico"><i class="fa-solid fa-broom" aria-hidden="true"></i></span>
-          <h3>Un chantier propre</h3>
-          <p>J'interviens proprement et je laisse votre intérieur net en fin de journée, comme si de rien n'était.</p>
+          <span class="why-ico"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span>
+          <h3>Des finitions soignées</h3>
+          <p>Mesures précises, pose dans les règles et le souci du détail à chaque étape.</p>
         </article>
         <article class="why-card reveal">
           <span class="why-ico"><i class="fa-solid fa-file-signature" aria-hidden="true"></i></span>
           <h3>Un devis clair</h3>
-          <p>Un devis détaillé et sans surprise, que vous validez avant le moindre travaux. Prix annoncé, prix tenu.</p>
+          <p>Détaillé et validé avant le moindre travaux. Prix annoncé, prix tenu.</p>
         </article>
         <article class="why-card reveal">
-          <span class="why-ico"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
-          <h3>Un artisan local</h3>
-          <p>Basé à Marseille, j'interviens vite dans un rayon de 30 km. Une relation de confiance, en direct.</p>
+          <span class="why-ico"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span>
+          <h3>Une intervention rapide</h3>
+          <p>Réponse sous 48 h et chantier organisé, dans les délais convenus. À Marseille et jusqu'à 100 km.</p>
+        </article>
+        <article class="why-card reveal">
+          <span class="why-ico"><i class="fa-solid fa-broom" aria-hidden="true"></i></span>
+          <h3>Un chantier propre</h3>
+          <p>Intérieur protégé pendant les travaux et laissé net en fin de journée.</p>
         </article>
       </div>
 
@@ -456,7 +463,7 @@
             <div class="rev-photo"><img src="assets/img/realisation-baie-coulissante-aluminium.webp" width="700" height="525" alt="Baie coulissante aluminium posée à Gémenos" loading="lazy" /></div>
             <div class="rev-content">
               <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-              <p class="rev-quote">« José a posé mes nouvelles fenêtres nickel, ponctuel et de bon conseil sur le modèle. Prix correct, rien à redire. »</p>
+              <p class="rev-quote">« José a posé mes nouvelles fenêtres proprement, ponctuel et de bon conseil sur le modèle. Prix correct, rien à redire. »</p>
               <div class="rev-foot"><span class="avatar">K</span><div class="rev-who"><strong>Karim B.</strong><span>Gémenos</span></div><span class="rev-date"><i class="fa-regular fa-calendar" aria-hidden="true"></i> Janvier 2025</span></div>
             </div>
           </article>
@@ -491,6 +498,49 @@
           <button class="fan-arrow" id="revNext" aria-label="Avis suivant"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
         </div>
       </div>
+
+      <div class="avis-grid">
+        <article class="avis-card reveal">
+          <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p>Pose de mes fenêtres alu impeccable, du conseil au montage. Chantier propre et délais tenus.</p>
+          <footer><span class="avatar">L</span><div><strong>Laurent P.</strong><small>Marseille 12<sup>e</sup></small></div></footer>
+        </article>
+        <article class="avis-card reveal">
+          <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p>José a installé ma climatisation réversible rapidement et proprement. Très bon conseil sur le matériel.</p>
+          <footer><span class="avatar">F</span><div><strong>Fatima Z.</strong><small>Aubagne</small></div></footer>
+        </article>
+        <article class="avis-card reveal">
+          <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p>Remplacement de plusieurs volets roulants à la maison. Travail soigné et finitions au top.</p>
+          <footer><span class="avatar">D</span><div><strong>Didier M.</strong><small>La Ciotat</small></div></footer>
+        </article>
+        <article class="avis-card reveal">
+          <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p>Devis clair et sans surprise, prix tenu. Une porte d'entrée alu posée parfaitement. Je recommande.</p>
+          <footer><span class="avatar">S</span><div><strong>Sandra B.</strong><small>Gémenos</small></div></footer>
+        </article>
+        <article class="avis-card reveal">
+          <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p>Garde-corps en verre posé sur le balcon, rendu très propre et sécurisant. Artisan sérieux et ponctuel.</p>
+          <footer><span class="avatar">R</span><div><strong>Rachid E.</strong><small>Marseille 9<sup>e</sup></small></div></footer>
+        </article>
+        <article class="avis-card reveal">
+          <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p>Un seul interlocuteur du début à la fin, c'est très appréciable. Store banne motorisé installé proprement, du beau travail.</p>
+          <footer><span class="avatar">C</span><div><strong>Caroline V.</strong><small>Cassis</small></div></footer>
+        </article>
+        <article class="avis-card reveal">
+          <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p>Aménagement intérieur sur-mesure réalisé avec beaucoup de soin. Bon contact et travail de qualité.</p>
+          <footer><span class="avatar">J</span><div><strong>Julien R.</strong><small>Marseille 5<sup>e</sup></small></div></footer>
+        </article>
+        <article class="avis-card reveal">
+          <div class="stars" aria-hidden="true"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p>Intervention rapide pour le commerce, devanture changée sans perturber l'activité. Très professionnel.</p>
+          <footer><span class="avatar">N</span><div><strong>Nadia &amp; Co</strong><small>Marseille centre</small></div></footer>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -512,7 +562,7 @@
   <section class="map-section">
     <div class="container map-head reveal">
       <span class="eyebrow">Zone d'intervention</span>
-      <h2 class="section-title">Marseille et 30 km à la ronde</h2>
+      <h2 class="section-title">Marseille et jusqu'à 100 km autour</h2>
       <p class="section-lead">J'interviens sur Marseille, Gémenos, Aubagne, La Ciotat, Cassis et les communes alentour.</p>
     </div>
     <div id="map" class="map-embed" role="img" aria-label="Carte de la zone d'intervention autour de Marseille"></div>
@@ -521,6 +571,9 @@
   <!-- ============ CONTACT ============ -->
   <section class="section contact" id="contact">
     <div class="container">
+      <!-- EMPLACEMENT VISUEL 3D (optionnel) : personnage 3D "à l'écoute / téléphone à la main",
+           à poser vers le bas de cette section sur la ligne de séparation. À n'intégrer qu'avec
+           un asset PNG transparent propre (ex. assets/img/perso-3d-telephone.png), sinon laisser vide. -->
       <div class="devis-card reveal">
         <aside class="devis-aside">
           <span class="eyebrow eyebrow-light">Devis gratuit</span>
@@ -534,7 +587,7 @@
           <div class="devis-contact">
             <a href="tel:+33612345678"><i class="fa-solid fa-phone" aria-hidden="true"></i> 06 12 34 56 78</a>
             <a href="mailto:contact@m13-menuiseries.fr"><i class="fa-solid fa-envelope" aria-hidden="true"></i> contact@m13-menuiseries.fr</a>
-            <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Marseille et 30 km à la ronde</p>
+            <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Marseille et jusqu'à 100 km autour</p>
             <p><i class="fa-solid fa-clock" aria-hidden="true"></i> Du lundi au samedi, 8h - 19h</p>
           </div>
         </aside>
@@ -552,12 +605,14 @@
               <h3>Quel est votre projet ?</h3>
               <div class="chip-grid">
                 <button type="button" class="chip" data-val="Fenêtres"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i> Fenêtres</button>
-                <button type="button" class="chip" data-val="Volets roulants"><i class="fa-solid fa-grip-lines" aria-hidden="true"></i> Volets roulants</button>
+                <button type="button" class="chip" data-val="Volets"><i class="fa-solid fa-grip-lines" aria-hidden="true"></i> Volets</button>
+                <button type="button" class="chip" data-val="Portes"><i class="fa-solid fa-door-closed" aria-hidden="true"></i> Portes</button>
                 <button type="button" class="chip" data-val="Stores bannes"><i class="fa-solid fa-umbrella" aria-hidden="true"></i> Stores bannes</button>
-                <button type="button" class="chip" data-val="Porte d'entrée"><i class="fa-solid fa-door-closed" aria-hidden="true"></i> Porte d'entrée</button>
                 <button type="button" class="chip" data-val="Garde-corps"><i class="fa-solid fa-grip-lines-vertical" aria-hidden="true"></i> Garde-corps</button>
+                <button type="button" class="chip" data-val="Menuiserie intérieure"><i class="fa-solid fa-couch" aria-hidden="true"></i> Menuiserie intérieure</button>
+                <button type="button" class="chip" data-val="Menuiserie extérieure"><i class="fa-solid fa-house-chimney-window" aria-hidden="true"></i> Menuiserie extérieure</button>
                 <button type="button" class="chip" data-val="Climatisation"><i class="fa-solid fa-snowflake" aria-hidden="true"></i> Climatisation</button>
-                <button type="button" class="chip" data-val="Autre / plusieurs"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Autre</button>
+                <button type="button" class="chip" data-val="Autre projet"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Autre projet</button>
               </div>
               <input type="hidden" id="projet" name="projet" />
             </div>
@@ -576,6 +631,10 @@
                 <label for="email">Email (facultatif)</label>
                 <input type="email" id="email" name="email" placeholder="vous@email.fr" />
               </div>
+              <div class="field">
+                <label for="ville">Ville</label>
+                <input type="text" id="ville" name="ville" placeholder="Marseille, Aubagne, La Ciotat..." />
+              </div>
             </div>
 
             <div class="devis-step" data-step="2">
@@ -584,7 +643,10 @@
                 <label for="message">En quelques mots</label>
                 <textarea id="message" name="message" rows="4" placeholder="Type de logement, nombre de fenêtres, délais souhaités..."></textarea>
               </div>
-              <p class="form-note"><i class="fa-solid fa-lock" aria-hidden="true"></i> Vos informations restent confidentielles.</p>
+              <!-- Anti-spam honeypot : invisible pour les humains, rempli par les robots -->
+              <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
+              <p class="form-note"><i class="fa-solid fa-lock" aria-hidden="true"></i> Vos informations restent confidentielles. <a href="politique-confidentialite.html">Consultez notre politique de confidentialité.</a></p>
+              <p class="form-feedback" id="devisError" role="alert" hidden><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> L'envoi a échoué. Réessayez ou appelez-nous au 06 12 34 56 78.</p>
             </div>
 
             <div class="devis-actions">
@@ -626,7 +688,7 @@
         </div>
         <div class="faq-item">
           <button class="faq-q" aria-expanded="false">Vos poses sont-elles garanties&nbsp;?<i class="fa-solid fa-plus" aria-hidden="true"></i></button>
-          <div class="faq-a"><p>Les menuiseries que je pose sont couvertes par les garanties de leurs fabricants. De mon côté, je m'engage à revenir régler le moindre détail après la pose jusqu'à ce que tout soit parfaitement nickel.</p></div>
+          <div class="faq-a"><p>Les menuiseries que je pose sont couvertes par les garanties de leurs fabricants. De mon côté, je m'engage à revenir régler le moindre détail après la pose jusqu'à ce que tout soit parfaitement réglé.</p></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" aria-expanded="false">Quelle zone géographique couvrez-vous&nbsp;?<i class="fa-solid fa-plus" aria-hidden="true"></i></button>
@@ -638,11 +700,11 @@
         </div>
         <div class="faq-item">
           <button class="faq-q" aria-expanded="false">Quels matériaux et marques utilisez-vous&nbsp;?<i class="fa-solid fa-plus" aria-hidden="true"></i></button>
-          <div class="faq-a"><p>Je travaille avec des fournisseurs reconnus et des menuiseries certifiées. Je vous présente les options, les labels et les performances avant toute commande.</p></div>
+          <div class="faq-a"><p>Je travaille avec des fournisseurs reconnus et des menuiseries de qualité reconnue. Je vous présente les options, les labels et les performances avant toute commande.</p></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" aria-expanded="false">Et si je ne suis pas satisfait de la pose&nbsp;?<i class="fa-solid fa-plus" aria-hidden="true"></i></button>
-          <div class="faq-a"><p>On ne se quitte pas tant que ce n'est pas nickel. Je repasse régler le moindre détail, et vous restez couvert par la garantie décennale et les garanties fabricant.</p></div>
+          <div class="faq-a"><p>On ne se quitte pas tant que tout n'est pas parfaitement réglé. Je repasse régler le moindre détail, et vous restez couvert par les garanties des fabricants.</p></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" aria-expanded="false">Travaillez-vous aussi pour les professionnels&nbsp;?<i class="fa-solid fa-plus" aria-hidden="true"></i></button>
@@ -661,43 +723,43 @@
       <a href="index.html" class="brand brand-light footer-logo" aria-label="M13 Menuiseries, accueil">
         <img src="assets/logo/m13-logo-horizontal-blanc.png" width="1081" height="268" alt="M13 Menuiseries" />
       </a>
-      <p>Artisan menuisier à Marseille. Fenêtres, volets, portes et garde-corps sur-mesure. Travail soigné, devis gratuit, intervention rapide.</p>
+      <p>Artisan menuisier à Marseille, M13 Menuiseries intervient pour vos projets de fenêtres, volets, portes, stores bannes, garde-corps, agencements et climatisation.</p>
       <div class="footer-social">
         <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
         <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
       </div>
     </div>
-
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="index.html">Accueil</a>
+      <a href="prestations.html">Prestations</a>
+      <a href="realisations.html">Réalisations</a>
+      <a href="pourquoi.html">Pourquoi M13</a>
+      <a href="contact.html">Devis / Contact</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="politique-confidentialite.html">Politique de confidentialité</a>
+    </div>
     <div class="footer-col">
       <h4>Prestations</h4>
       <a href="prestations.html#fenetres">Fenêtres</a>
       <a href="prestations.html#volets">Volets roulants</a>
+      <a href="prestations.html#portes">Portes</a>
       <a href="prestations.html#stores">Stores bannes</a>
       <a href="prestations.html#garde-corps">Garde-corps verre</a>
-      <a href="prestations.html">Toutes les prestations</a>
+      <a href="prestations.html#climatisation">Climatisation</a>
     </div>
-
-    <div class="footer-col">
-      <h4>Navigation</h4>
-      <a href="realisations.html">Réalisations</a>
-      <a href="pourquoi.html">Pourquoi nous</a>
-      <a href="index.html#avis">Avis</a>
-      <a href="contact.html">Devis gratuit</a>
-      <a href="mentions-legales.html">Mentions légales</a>
-    </div>
-
     <div class="footer-col">
       <h4>Contact</h4>
       <a href="tel:+33612345678"><i class="fa-solid fa-phone" aria-hidden="true"></i> 06 12 34 56 78</a>
       <a href="mailto:contact@m13-menuiseries.fr"><i class="fa-solid fa-envelope" aria-hidden="true"></i> contact@m13-menuiseries.fr</a>
-      <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> 14 Traverse de la Passerelle, 13014 Marseille</p>
+      <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Marseille et jusqu'à 100&nbsp;km autour</p>
       <p><i class="fa-solid fa-clock" aria-hidden="true"></i> Lun. au sam., 8h&nbsp;-&nbsp;19h</p>
     </div>
   </div>
   <div class="footer-bottom">
     <div class="container footer-bottom-inner">
       <span>© 2026 M13 Menuiseries · KAOUMI José. Tous droits réservés.</span>
-      <span><a href="mentions-legales.html">Mentions légales</a> · Artisan menuisier à Marseille</span>
+      <span><a href="mentions-legales.html">Mentions légales</a> · <a href="politique-confidentialite.html">Politique de confidentialité</a> · Site web conçu par Fabien Lopez Oanes</span>
     </div>
   </div>
 </footer>
