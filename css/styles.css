@@ -692,7 +692,11 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.08;col
 .footer-col-body{display:block}
 
 @media(max-width:768px){
-  .reassurance-grid{grid-template-columns:1fr 1fr;gap:1.4rem 1rem}
+  .reassurance-grid{grid-template-columns:1fr 1fr;gap:1.2rem 1rem}
+  .reassurance-item{flex-direction:column;text-align:center;gap:.6rem;align-items:center}
+  .reassurance-item .ri-ico{width:46px;height:46px;font-size:1.25rem}
+  .reassurance-item strong{font-size:1rem}
+  .reassurance-item span{font-size:.8rem}
   /* Réalisations plus compactes : 2 colonnes au lieu d'une seule */
   .real-grid{grid-template-columns:repeat(2,1fr)!important;gap:.8rem}
   .real-grid .gallery-item figcaption{padding:.9rem .7rem .6rem}
@@ -709,13 +713,22 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.08;col
   .footer-col-body a:first-child,.footer-col-body p:first-child{margin-top:.85rem}
 }
 @media(max-width:420px){
-  .reassurance-grid{grid-template-columns:1fr}
+  .reassurance-grid{gap:1rem .8rem}
+  .reassurance-item strong{font-size:.92rem}
 }
 
 /* ---------- Personnage 3D (section devis) ---------- */
 .contact{position:relative;overflow:hidden}
 .devis-perso{position:absolute;right:clamp(.5rem,3vw,3.5rem);bottom:0;width:clamp(150px,15vw,210px);height:auto;pointer-events:none;z-index:3;filter:drop-shadow(0 16px 22px rgba(18,47,74,.22))}
-@media(max-width:1100px){.devis-perso{display:none}}
+/* Sur tablette/mobile : plus petit et posé SOUS la carte (dans le padding bas), sans la gêner */
+@media(max-width:1100px){
+  .contact{padding-bottom:155px}
+  .devis-perso{width:118px;right:.6rem;bottom:8px}
+}
+@media(max-width:560px){
+  .contact{padding-bottom:140px}
+  .devis-perso{width:100px;right:.5rem}
+}
 
 /* ---------- Avis : hauteur photo maîtrisée sur mobile ---------- */
 @media(max-width:768px){
