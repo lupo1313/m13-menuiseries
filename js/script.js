@@ -79,6 +79,20 @@
     if (e.key === 'Escape' && navMenu.classList.contains('open')) closeMenu();
   });
 
+  /* ---------- Footer : colonnes en accordéon sur mobile ---------- */
+  document.querySelectorAll('.site-footer .footer-col').forEach(function (col) {
+    const h4 = col.querySelector('h4');
+    if (!h4) return;
+    const body = document.createElement('div');
+    body.className = 'footer-col-body';
+    let n = h4.nextSibling;
+    while (n) { const next = n.nextSibling; body.appendChild(n); n = next; }
+    col.appendChild(body);
+    h4.addEventListener('click', function () {
+      if (window.matchMedia('(max-width:768px)').matches) col.classList.toggle('open');
+    });
+  });
+
   /* ---------- Reveal au scroll (avec léger décalage) ---------- */
   const reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {

@@ -487,14 +487,14 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.08;col
 
 /* ---------- Logo image ---------- */
 .brand-logo{height:46px;width:auto;display:block}
-/* Header : blanc au-dessus du hero, couleur une fois le header scrollé (fond clair) */
-.brand .logo-full.logo-light{display:block}
-.brand .logo-full.logo-dark{display:none}
-.brand .logo-compact{display:none}
-.scrolled .brand .logo-full.logo-light{display:none}
-.scrolled .brand .logo-full.logo-dark{display:block}
-/* Footer (fond sombre) : logo blanc */
-.footer-logo img{height:60px;width:auto;display:block}
+/* Header : version "fond sombre" (bonhomme visible + texte blanc) au-dessus du hero,
+   version couleur (texte navy) une fois le header scrollé sur fond clair */
+.brand .logo-light{display:block}
+.brand .logo-dark{display:none}
+.scrolled .brand .logo-light{display:none}
+.scrolled .brand .logo-dark{display:block}
+/* Footer (fond sombre) : logo fond sombre */
+.footer-logo img{height:58px;width:auto;display:block}
 
 /* ---------- CTA de section ---------- */
 .section-cta{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-top:clamp(2.4rem,5vw,3.4rem)}
@@ -581,13 +581,8 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.08;col
   .info-grid{grid-template-columns:repeat(3,1fr)}
 }
 @media(max-width:768px){
-  /* Logo compact sur mobile */
-  .brand-logo{height:40px}
-  .brand .logo-full{display:none!important}
-  .brand .logo-compact.logo-light{display:block}
-  .brand .logo-compact.logo-dark{display:none}
-  .scrolled .brand .logo-compact.logo-light{display:none}
-  .scrolled .brand .logo-compact.logo-dark{display:block}
+  /* Logo un peu plus petit sur mobile */
+  .brand-logo{height:38px}
   .footer-logo img{height:54px}
   .presta{grid-template-columns:1fr;gap:1.4rem}
   .presta:nth-of-type(even) .presta-media{order:0}
@@ -678,11 +673,43 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.08;col
   .nav-group-toggle{width:100%;justify-content:space-between;color:#fff;font-size:1.08rem;padding:.7rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
   .nav-group-toggle .nav-caret{font-size:.85em}
   .nav-group.open .nav-caret{transform:rotate(180deg)}
-  .nav-submenu{position:static;transform:none;opacity:1;visibility:visible;min-width:0;background:transparent;border:none;box-shadow:none;padding:0 0 0 .6rem;max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
+  .nav-submenu{position:static!important;left:auto!important;transform:none!important;opacity:1!important;visibility:visible!important;min-width:0;width:100%;background:transparent;border:none;box-shadow:none;padding:0 0 0 .6rem;max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
   .nav-submenu::before{display:none}
   .nav-group.open .nav-submenu{max-height:420px}
   .nav-submenu a{color:rgba(233,241,247,.85)!important;font-size:.98rem;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
   .nav-submenu a:hover{background:transparent;color:#fff!important}
+}
+
+/* ---------- Bande de réassurance (entre FAQ et footer) ---------- */
+.reassurance{background:var(--navy);padding:clamp(2.4rem,5vw,3.4rem) 0}
+.reassurance-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}
+.reassurance-item{display:flex;align-items:center;gap:1rem;color:#fff}
+.reassurance-item .ri-ico{flex-shrink:0;width:52px;height:52px;border-radius:14px;background:rgba(224,138,46,.16);color:var(--amber);display:grid;place-items:center;font-size:1.4rem}
+.reassurance-item strong{display:block;font-family:var(--font-display);font-weight:600;font-size:1.08rem;line-height:1.2}
+.reassurance-item span{display:block;font-size:.85rem;color:rgba(233,241,247,.72);margin-top:.2rem}
+
+/* ---------- Footer accordéon (mobile) ---------- */
+.footer-col-body{display:block}
+
+@media(max-width:768px){
+  .reassurance-grid{grid-template-columns:1fr 1fr;gap:1.4rem 1rem}
+  /* Réalisations plus compactes : 2 colonnes au lieu d'une seule */
+  .real-grid{grid-template-columns:repeat(2,1fr)!important;gap:.8rem}
+  .real-grid .gallery-item figcaption{padding:.9rem .7rem .6rem}
+  .real-grid .gallery-item figcaption strong{font-size:.9rem}
+  .real-grid .gallery-item figcaption span{font-size:.72rem}
+  .gallery{grid-template-columns:repeat(2,1fr)!important;grid-auto-rows:130px!important;gap:.8rem}
+  .gallery-tall,.gallery-wide{grid-column:auto!important;grid-row:auto!important}
+  /* Footer : colonnes repliables */
+  .footer-col h4{cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin-bottom:0;padding:.95rem 0;border-bottom:1px solid rgba(255,255,255,.1)}
+  .footer-col h4::after{content:"\f078";font-family:"Font Awesome 6 Free";font-weight:900;font-size:.72rem;color:var(--amber);transition:transform .3s var(--ease)}
+  .footer-col.open h4::after{transform:rotate(180deg)}
+  .footer-col-body{max-height:0;overflow:hidden;transition:max-height .4s var(--ease)}
+  .footer-col.open .footer-col-body{max-height:360px}
+  .footer-col-body a:first-child,.footer-col-body p:first-child{margin-top:.85rem}
+}
+@media(max-width:420px){
+  .reassurance-grid{grid-template-columns:1fr}
 }
 
 /* ---------- Réduction de mouvement ---------- */
