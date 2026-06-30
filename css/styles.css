@@ -712,6 +712,19 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.08;col
   .reassurance-grid{grid-template-columns:1fr}
 }
 
+/* ---------- Personnage 3D (section devis) ---------- */
+.contact{position:relative;overflow:hidden}
+.devis-perso{position:absolute;right:clamp(.5rem,3vw,3.5rem);bottom:0;width:clamp(150px,15vw,210px);height:auto;pointer-events:none;z-index:3;filter:drop-shadow(0 16px 22px rgba(18,47,74,.22))}
+@media(max-width:1100px){.devis-perso{display:none}}
+
+/* ---------- Avis : hauteur photo maîtrisée sur mobile ---------- */
+@media(max-width:768px){
+  .rev-photo{height:200px!important;min-height:0!important}
+}
+@media(max-width:560px){
+  .rev-photo{height:170px!important}
+}
+
 /* ---------- Réduction de mouvement ---------- */
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;transition-duration:.01ms!important;scroll-behavior:auto}
