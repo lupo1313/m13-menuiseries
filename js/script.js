@@ -408,16 +408,35 @@
     window.addEventListener('resize', function () { clearTimeout(fanRT); fanRT = setTimeout(function () { fanLayout(false); }, 120); });
   }
 
-  /* ---------- Carte zone d'intervention (Leaflet + OpenStreetMap) ---------- */
+  /* ---------- Carte zone d'intervention (Leaflet chargé à la demande) ---------- */
   const mapEl = document.getElementById('map');
-  if (mapEl && window.L) {
-    const center = [43.2965, 5.3698];
-    const map = L.map('map', { scrollWheelZoom: false }).setView(center, 9);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap' }).addTo(map);
-    const circle = L.circle(center, { radius: 30000, color: '#E08A2E', weight: 2, fillColor: '#E08A2E', fillOpacity: 0.12 }).addTo(map);
-    L.circleMarker(center, { radius: 7, color: '#fff', weight: 2, fillColor: '#122F4A', fillOpacity: 1 }).addTo(map).bindPopup('M13 Menuiseries · Marseille');
-    map.fitBounds(circle.getBounds(), { padding: [24, 24] });
-    setTimeout(function () { map.invalidateSize(); }, 250);
+  if (mapEl) {
+    function initMap() {
+      const center = [43.2965, 5.3698];
+      const map = L.map('map', { scrollWheelZoom: false }).setView(center, 8);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap' }).addTo(map);
+      const circle = L.circle(center, { radius: 100000, color: '#E08A2E', weight: 2, fillColor: '#E08A2E', fillOpacity: 0.12 }).addTo(map);
+      L.circleMarker(center, { radius: 7, color: '#fff', weight: 2, fillColor: '#122F4A', fillOpacity: 1 }).addTo(map).bindPopup('M13 Menuiseries · Marseille');
+      map.fitBounds(circle.getBounds(), { padding: [24, 24] });
+      setTimeout(function () { map.invalidateSize(); }, 250);
+    }
+    function loadLeaflet() {
+      if (window.L) { initMap(); return; }
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+      document.head.appendChild(css);
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+      s.onload = initMap;
+      document.body.appendChild(s);
+    }
+    if ('IntersectionObserver' in window) {
+      const mio = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { mio.disconnect(); loadLeaflet(); } });
+      }, { rootMargin: '400px' });
+      mio.observe(mapEl);
+    } else { loadLeaflet(); }
   }
 
   /* ---------- Carrousel d'avis ---------- */
