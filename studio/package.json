@@ -1,0 +1,31 @@
+{
+  "name": "m13-studio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "typecheck": "tsc --noEmit",
+    "validate": "sanity schema validate",
+    "test:build": "node build/build.test.mjs",
+    "build:site": "sanity exec build/build-site.mjs --",
+    "validate:site": "node build/validate-output.mjs",
+    "check:queries": "sanity schema extract --path schema.json --force && node scripts/check-queries.mjs"
+  },
+  "dependencies": {
+    "@sanity/locale-fr-fr": "^1.2.37",
+    "@sanity/vision": "^6.24.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sanity": "^6.24.0",
+    "styled-components": "^6.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "node-html-parser": "^7.1.0",
+    "typescript": "^5.9.3"
+  }
+}

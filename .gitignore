@@ -16,3 +16,14 @@ settings.local.json
 # --- Archives et sorties de packaging ---
 *.zip
 dist-hostinger/
+
+# --- Sanity Studio (local) ---
+node_modules/
+studio/.sanity/
+studio/dist/
+studio/schema.json
+!.env.example
+studio/import/
+studio/prototype/
+studio/*.log
+dist-generated/

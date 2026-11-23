@@ -1,0 +1,59 @@
+# Génération du site à partir des contenus PUBLIÉS dans Sanity + contrôles.
+# AUCUN DÉPLOIEMENT : le résultat est seulement conservé comme artefact pendant 7 jours.
+name: Génération Sanity (sans déploiement)
+
+on:
+  workflow_dispatch: # lancement manuel depuis l'onglet Actions
+  repository_dispatch: # futur webhook Sanity
+    types: [sanity-publish]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: generation-sanity
+  cancel-in-progress: true
+
+jobs:
+  generer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SANITY_STUDIO_PROJECT_ID: mr0tmq28 # identifiant public (non secret)
+      SANITY_STUDIO_DATASET: production
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      - name: Installation
+        run: npm ci
+
+      - name: Contrôles du Studio (types, schéma)
+        run: |
+          npm run typecheck
+          npm run validate
+
+      - name: Tests des garde-fous du générateur
+        run: npm run test:build
+
+      - name: Génération (contenus publiés uniquement)
+        run: npx sanity exec build/build-site.mjs -- --out ../dist-generated
+
+      - name: Validation de la sortie
+        run: node build/validate-output.mjs --out ../dist-generated
+
+      - name: Conservation du résultat (inspection, pas de mise en ligne)
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-genere
+          path: dist-generated
+          retention-days: 7
+          if-no-files-found: error
