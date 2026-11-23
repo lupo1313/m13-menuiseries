@@ -1,4 +1,4 @@
-// Crée (une seule fois) le webhook Sanity → GitHub Actions « Publication Sanity (automatique) ».
+﻿// Crée (une seule fois) le webhook Sanity → GitHub Actions « Publication Sanity (automatique) ».
 // Le jeton GitHub (fine-grained, dépôt m13-menuiseries uniquement, permission Actions : lecture/écriture)
 // est lu dans un fichier local, jamais affiché, puis le fichier est supprimé après succès.
 // Usage (depuis studio/) : npx sanity exec scripts/create-webhook.mjs --with-user-token -- <fichier-jeton>
@@ -13,11 +13,19 @@ if (!/^github_pat_[A-Za-z0-9_]{40,}$/.test(token)) throw new Error('Jeton refus�
 const NAME = 'GitHub – publication M13'
 const client = getCliClient({apiVersion: '2021-10-04'}).withConfig({useProjectHostname: false})
 const projectId = client.config().projectId
-const hooks = await client.request({uri: `/hooks/projects/${projectId}`})
-if (hooks.some((h) => h.name === NAME)) { console.log(`Le webhook « ${NAME} » existe déjà : rien à faire.`); process.exit(0) }
+const hooks = await client.request({url: `/hooks/projects/${projectId}`})
+const existing = hooks.find((h) => h.name === NAME)
+if (existing) {
+  // --remplacer-jeton : met à jour seulement l'en-tête d'authentification (jeton renouvelé).
+  if (!process.argv.includes('--remplacer-jeton')) { console.log(`Le webhook « ${NAME} » existe déjà : rien à faire.`); process.exit(0) }
+  await client.request({url: `/hooks/projects/${projectId}/${existing.id}`, method: 'PATCH', body: {headers: {...existing.headers, Authorization: `Bearer ${token}`}}})
+  rmSync(file)
+  console.log(`✓ Jeton du webhook remplacé (${existing.id}). Fichier du jeton supprimé.`)
+  process.exit(0)
+}
 
 const hook = await client.request({
-  uri: `/hooks/projects/${projectId}`,
+  url: `/hooks/projects/${projectId}`,
   method: 'POST',
   body: {
     type: 'document',
