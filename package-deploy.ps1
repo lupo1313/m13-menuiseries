@@ -1,7 +1,13 @@
 # Prépare un dossier + zip prêts à envoyer sur Hostinger (liste blanche). Ne déploie rien.
 # Usage : powershell -ExecutionPolicy Bypass -File .\package-deploy.ps1
+param([switch]$AllowDirty)
 $ErrorActionPreference = 'Stop'
 $root  = $PSScriptRoot
+# Garde-fou : refuse de packager des changements non commités (donc non validés) sauf -AllowDirty.
+Push-Location $root
+$dirty = git status --porcelain -- '*.html' css js assets robots.txt sitemap.xml .htaccess | Where-Object { $_ -notmatch 'test-liquid-glass.html' }
+Pop-Location
+if ($dirty -and -not $AllowDirty) { Write-Host 'Changements non commités dans les fichiers publiables :'; $dirty | ForEach-Object { Write-Host "  $_" }; Write-Error 'Packaging refusé. Committez les changements approuvés (ou -AllowDirty).'; exit 1 }
 $out   = Join-Path $root 'dist-hostinger'
 $stage = Join-Path $out 'site'
 if (Test-Path $out) { Remove-Item $out -Recurse -Force }
