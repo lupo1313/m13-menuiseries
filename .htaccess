@@ -1,0 +1,79 @@
+# ============================================================
+#  M13 Menuiseries — URLs propres (sans .html) + redirections 301
+# ============================================================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1) /index.html  ->  /   (301)
+  RewriteCond %{THE_REQUEST} \s/index\.html[\s?] [NC]
+  RewriteRule ^index\.html$ / [R=301,L]
+
+  # 2) /page.html  ->  /page   (301, supprime l'extension .html)
+  RewriteCond %{THE_REQUEST} \s/([^\s?]+)\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L]
+
+  # 3) URL propre  ->  sert le fichier .html en interne (pas de redirection visible)
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}\.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
+</IfModule>
+
+# ============================================================
+#  M13 Menuiseries — Performance (cache navigateur + compression)
+# ============================================================
+
+# ---- Compression gzip des fichiers texte ----
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json image/svg+xml application/xml application/rss+xml application/vnd.ms-fontobject font/ttf font/otf
+</IfModule>
+
+# ---- Durées de mise en cache ----
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # HTML : jamais mis en cache longtemps (le contenu peut changer)
+  ExpiresByType text/html "access plus 0 seconds"
+  # CSS / JS : 1 an — le rafraîchissement est forcé par le paramètre ?v=
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  # Images / icônes / polices : 1 an
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# ---- En-têtes Cache-Control ----
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|webp|jpg|jpeg|png|svg|ico|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ============================================================
+#  M13 Menuiseries — Securite
+# ============================================================
+
+# ---- En-tetes de securite HTTP ----
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; img-src 'self' data: https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; font-src 'self' https://cdnjs.cloudflare.com; connect-src 'self' https://formsubmit.co; form-action 'self' https://formsubmit.co; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+</IfModule>
+
+# ---- Interdire le listing des dossiers ----
+Options -Indexes
+
+# ---- Bloquer l'acces direct aux fichiers sensibles (dotfiles, backups, sources) ----
+<FilesMatch "(^\.|\.(bak|old|zip|tar|gz|log|ini|sh|md|ps1|sql|json|ya?ml|lock)$|^test-liquid-glass\.html$)">
+  Require all denied
+</FilesMatch>

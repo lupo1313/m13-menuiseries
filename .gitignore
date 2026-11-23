@@ -1,2 +1,18 @@
-# Photos sources originales (non optimisées) — ne pas déployer
+# --- Non publiés / sources locales ---
 Md 13 Menuiserie/
+strategie/
+test-liquid-glass.html
+
+# --- Secrets et configuration locale : ne jamais versionner ni envoyer à Hostinger ---
+.mcp.json
+.env
+.env.*
+*.pem
+*.key
+.claude/
+.agents/
+settings.local.json
+
+# --- Archives et sorties de packaging ---
+*.zip
+dist-hostinger/
