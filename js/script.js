@@ -15,6 +15,10 @@
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+  // Sur une navigation "retour" (bouton précédent, y compris depuis le cache bfcache),
+  // le navigateur restaure parfois la position de scroll après ce script : on recalcule
+  // au frame suivant pour éviter un header resté transparent (texte blanc invisible).
+  window.addEventListener('pageshow', function () { requestAnimationFrame(onScroll); });
 
   /* ---------- Menu mobile ---------- */
   const navToggle = document.getElementById('navToggle');
@@ -63,7 +67,7 @@
         const open = navGroup.classList.toggle('open');
         navGroupToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       } else {
-        window.location.href = 'prestations.html';
+        window.location.href = '/prestations';
       }
     });
   }
@@ -238,9 +242,13 @@
     });
     dNext.addEventListener('click', function () { if (dValid() && dCur < dTotal - 1) { dCur++; dRender(); } });
     dBack.addEventListener('click', function () { if (dCur > 0) { dCur--; dRender(); } });
-    // Adresse de réception des demandes.
-    // TODO : remplacer par contact@m13-menuiseries.fr (ou devis@…) une fois le domaine email configuré.
-    const DEVIS_EMAIL = 'flopezoanes@gmail.com';
+    // Réception des demandes via endpoints FormSubmit HASHÉS (aucune adresse email en clair dans le code).
+    // Seul destinataire : boîte pro de José (hash 1). L'ancienne copie (hash 2) a été retirée.
+    const DEVIS_EMAILS = ['de67b1a7e229f3cb8bac0ae141dacfe0'];
+    // Anti-spam invisible : un humain met toujours plusieurs secondes à remplir le formulaire.
+    // Un envoi trop rapide après l'affichage de la page trahit un robot.
+    const dLoadedAt = Date.now();
+    const D_MIN_FILL_MS = 3000;
 
     function dShowSuccess() {
       dForm.style.display = 'none';
@@ -253,9 +261,10 @@
     dForm.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!dValid()) return;
-      // Honeypot anti-spam : si rempli, on simule un succès sans rien envoyer.
+      // Honeypot + délai anti-soumission-instantanée : si suspect, on simule un succès sans rien envoyer.
       const hp = dForm.querySelector('.hp-field');
-      if (hp && hp.value) { dShowSuccess(); return; }
+      const tooFast = (Date.now() - dLoadedAt) < D_MIN_FILL_MS;
+      if ((hp && hp.value) || tooFast) { dShowSuccess(); return; }
 
       const errEl = document.getElementById('devisError');
       if (errEl) errEl.hidden = true;
@@ -263,28 +272,39 @@
       const prev = dSubmit.innerHTML;
       dSubmit.innerHTML = 'Envoi…';
 
-      const fd = new FormData();
-      fd.append('Projet', dProjet.value || 'Non précisé');
-      fd.append('Nom', dVal('nom'));
-      fd.append('Téléphone', dVal('tel'));
-      fd.append('Email', dVal('email'));
-      fd.append('Ville', dVal('ville'));
-      fd.append('Message', dVal('message'));
-      fd.append('_subject', 'Nouvelle demande de devis — M13 Menuiseries');
-      fd.append('_captcha', 'false');
-      fd.append('_template', 'table');
+      function buildFormData() {
+        const fd = new FormData();
+        fd.append('Projet', dProjet.value || 'Non précisé');
+        fd.append('Nom', dVal('nom'));
+        fd.append('Téléphone', dVal('tel'));
+        fd.append('Email', dVal('email'));
+        fd.append('Ville', dVal('ville'));
+        fd.append('Message', dVal('message'));
+        fd.append('_subject', 'Nouvelle demande de devis — M13 Menuiseries');
+        fd.append('_honey', '');
+        fd.append('_captcha', 'false');
+        fd.append('_template', 'table');
+        return fd;
+      }
 
-      fetch('https://formsubmit.co/ajax/' + DEVIS_EMAIL, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: fd
-      }).then(function (r) { return r.ok ? r.json().catch(function () { return {}; }) : Promise.reject(); })
-        .then(function () { dShowSuccess(); })
-        .catch(function () {
+      const sends = DEVIS_EMAILS.map(function (email) {
+        return fetch('https://formsubmit.co/ajax/' + email, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: buildFormData()
+        }).then(function (r) { return r.ok; }).catch(function () { return false; });
+      });
+
+      Promise.all(sends).then(function (results) {
+        // Succès si l'envoi est passé.
+        if (results.indexOf(true) !== -1) {
+          dShowSuccess();
+        } else {
           dSubmit.disabled = false;
           dSubmit.innerHTML = prev;
           if (errEl) errEl.hidden = false;
-        });
+        }
+      });
     });
     dRender();
   }
@@ -317,9 +337,11 @@
     hrVp.addEventListener('pointerleave', function () { clearInterval(hrTimer); hrTimer = setInterval(hrNext, 4500); });
   }
 
-  /* ---------- Éventail de prestations (fan carousel) ---------- */
+  /* ---------- Éventail de prestations (fan carousel, GSAP chargé à la demande) ---------- */
   const fan = document.getElementById('fan');
-  if (fan && window.gsap) {
+  if (fan) {
+   function initFan() {
+    if (!window.gsap) return;
     const fanCards = Array.prototype.slice.call(fan.querySelectorAll('.fan-card'));
     const FN = fanCards.length;
     const fanTitle = document.getElementById('fanTitle');
@@ -406,6 +428,22 @@
     fanLayout(false);
     let fanRT;
     window.addEventListener('resize', function () { clearTimeout(fanRT); fanRT = setTimeout(function () { fanLayout(false); }, 120); });
+   }
+   function loadGsapThenFan() {
+     if (window.gsap) { initFan(); return; }
+     var gs = document.createElement('script');
+     gs.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+     gs.integrity = 'sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt';
+     gs.crossOrigin = 'anonymous';
+     gs.onload = initFan;
+     document.body.appendChild(gs);
+   }
+   if ('IntersectionObserver' in window) {
+     var fio = new IntersectionObserver(function (es) {
+       es.forEach(function (e) { if (e.isIntersecting) { fio.disconnect(); loadGsapThenFan(); } });
+     }, { rootMargin: '400px' });
+     fio.observe(fan);
+   } else { loadGsapThenFan(); }
   }
 
   /* ---------- Carte zone d'intervention (Leaflet chargé à la demande) ---------- */
@@ -425,9 +463,13 @@
       const css = document.createElement('link');
       css.rel = 'stylesheet';
       css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+      css.integrity = 'sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb';
+      css.crossOrigin = 'anonymous';
       document.head.appendChild(css);
       const s = document.createElement('script');
       s.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+      s.integrity = 'sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO';
+      s.crossOrigin = 'anonymous';
       s.onload = initMap;
       document.body.appendChild(s);
     }
