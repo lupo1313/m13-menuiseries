@@ -1,0 +1,142 @@
+# Workflow COMMUN (appelé par les autres) : génère, contrôle, assemble et déploie le site
+# sur la cible demandée, avec garde-fous propres à chaque cible.
+#   cible test       → dossier contenant « test », hors du site principal, marqueur .m13-site-test
+#   cible production → domains/m13menuiseries.fr/public_html exactement, marqueur .m13-site-production,
+#                      environnement GitHub « production » (approbation manuelle exigée)
+# Actions : simulation (aucun envoi) · deployer (sauvegarde puis envoi, sans suppression) · restaurer
+name: _deployer (commun)
+
+on:
+  workflow_call:
+    inputs:
+      cible: {type: string, required: true}
+      action: {type: string, required: true}
+      sauvegarde: {type: string, required: false, default: ''}
+
+permissions:
+  contents: read
+
+jobs:
+  deployer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: ${{ inputs.cible }}
+    concurrency:
+      group: deploiement-${{ inputs.cible }}
+      cancel-in-progress: false
+    env:
+      CIBLE: ${{ inputs.cible }}
+      ACTION: ${{ inputs.action }}
+      SAUVEGARDE: ${{ inputs.sauvegarde }}
+      SANITY_STUDIO_PROJECT_ID: mr0tmq28
+      SANITY_STUDIO_DATASET: production
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      REMOTE_DIR: ${{ secrets.REMOTE_DIR }}
+      SITE_URL: ${{ vars.SITE_URL }}
+    steps:
+      - name: Paramètres autorisés
+        run: |
+          case "$CIBLE" in test|production) ;; *) echo "::error::Cible inconnue : $CIBLE"; exit 1;; esac
+          case "$ACTION" in simulation|deployer|restaurer) ;; *) echo "::error::Action inconnue : $ACTION"; exit 1;; esac
+          echo "MARQUEUR=.m13-site-$CIBLE" >> "$GITHUB_ENV"
+          echo "BACKUPS=m13-sauvegardes-$CIBLE" >> "$GITHUB_ENV"
+
+      - uses: actions/checkout@v4
+
+      # ---------- Génération et assemblage ----------
+      - uses: actions/setup-node@v4
+        if: env.ACTION != 'restaurer'
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - name: Génération (contenus publiés) et contrôles
+        if: env.ACTION != 'restaurer'
+        working-directory: studio
+        run: |
+          npm ci
+          npm run test:build
+          npx sanity exec build/build-site.mjs -- --out ../dist-generated
+          node build/validate-output.mjs --out ../dist-generated
+          node build/assemble-site.mjs --gen ../dist-generated --out ../dist-site $([ "$CIBLE" = test ] && echo --test)
+      - name: Conservation du site assemblé
+        if: env.ACTION != 'restaurer'
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-${{ inputs.cible }}
+          path: dist-site
+          include-hidden-files: true
+          retention-days: 7
+
+      # ---------- Garde-fous AVANT toute connexion ----------
+      - name: Garde-fous du dossier distant
+        run: |
+          set -eu
+          fail() { echo "::error::$1"; exit 1; }
+          [ -n "$SSH_HOST" ] && [ -n "$SSH_PORT" ] && [ -n "$SSH_USER" ] && [ -n "$REMOTE_DIR" ] || fail "Secrets de l'environnement « $CIBLE » incomplets."
+          [[ "$REMOTE_DIR" =~ ^[A-Za-z0-9._/-]+$ ]] || fail "Dossier distant : caractères non autorisés."
+          [[ "$REMOTE_DIR" == *..* ]] && fail "Refus : « .. » interdit."
+          if [ "$CIBLE" = test ]; then
+            [[ "$REMOTE_DIR" =~ (^|/)domains/m13menuiseries\.fr(/|$) ]] && fail "Refus : dossier du site principal."
+            [[ "$REMOTE_DIR" =~ ^(/home/[^/]+/)?public_html(/|$) ]] && fail "Refus : public_html du site principal."
+            [[ "$REMOTE_DIR" =~ (^|/)[^/]*test[^/]*(/|$) ]] || fail "Refus : le dossier de test doit contenir « test »."
+          else
+            [[ "$REMOTE_DIR" =~ ^(/home/[^/]+/)?domains/m13menuiseries\.fr/public_html$ ]] || fail "Refus : chemin de production inattendu."
+            [ "$GITHUB_REF" = refs/heads/main ] || fail "Refus : la production se déploie uniquement depuis main."
+          fi
+          if [ "$ACTION" = restaurer ] && [ -n "$SAUVEGARDE" ]; then [[ "$SAUVEGARDE" =~ ^[0-9]{8}-[0-9]{6}$ ]] || fail "Nom de sauvegarde invalide."; fi
+          echo "Cible $CIBLE · dossier autorisé : $REMOTE_DIR"
+
+      - name: Clé SSH
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          set -eu
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
+          printf 'Host cible\n  HostName %s\n  Port %s\n  User %s\n  IdentityFile ~/.ssh/id_deploy\n  IdentitiesOnly yes\n  StrictHostKeyChecking yes\n' "$SSH_HOST" "$SSH_PORT" "$SSH_USER" > ~/.ssh/config
+
+      - name: Vérification du marqueur sur le serveur
+        run: |
+          ssh cible "test -f '$REMOTE_DIR/$MARQUEUR'" \
+            || { echo "::error::Marqueur $MARQUEUR absent dans $REMOTE_DIR : aucun envoi."; exit 1; }
+
+      # ---------- Actions ----------
+      - name: Simulation (aucun changement)
+        if: env.ACTION == 'simulation'
+        run: rsync -rltzi --dry-run --chmod=D755,F644 --exclude='.m13-site-*' dist-site/ "cible:$REMOTE_DIR/" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Sauvegarde (sur le serveur, hors web)
+        if: env.ACTION == 'deployer'
+        run: |
+          STAMP=$(date -u +%Y%m%d-%H%M%S)
+          ssh cible "set -e; mkdir -p ~/$BACKUPS; cp -a '$REMOTE_DIR' ~/$BACKUPS/$STAMP; ls -1d ~/$BACKUPS/[0-9]*-[0-9]*/ | sort -r | tail -n +6 | xargs -r rm -rf"
+          echo "Sauvegarde $CIBLE : $STAMP (5 dernières conservées)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Envoi (ajout / remplacement, jamais de suppression)
+        if: env.ACTION == 'deployer'
+        run: rsync -rltzi --chmod=D755,F644 --exclude='.m13-site-*' dist-site/ "cible:$REMOTE_DIR/"
+
+      - name: Restauration d'une sauvegarde
+        if: env.ACTION == 'restaurer'
+        run: |
+          ssh cible "set -e; B='$SAUVEGARDE'; [ -n \"\$B\" ] || B=\$(ls -1d ~/$BACKUPS/[0-9]*-[0-9]*/ | sort -r | head -n 1 | xargs basename); \
+            [ -f ~/$BACKUPS/\$B/$MARQUEUR ] || { echo 'Sauvegarde introuvable ou non marquée'; exit 1; }; \
+            rsync -a --delete ~/$BACKUPS/\$B/ '$REMOTE_DIR/'; echo Restauré : \$B" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Contrôle en ligne
+        if: env.ACTION != 'simulation' && env.SITE_URL != ''
+        run: |
+          for p in / /blog /realisations /sitemap.xml; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$SITE_URL$p")
+            echo "$SITE_URL$p : HTTP $code" | tee -a "$GITHUB_STEP_SUMMARY"
+            [ "$code" = 200 ] || [ "$code" = 401 ] || { echo "::error::Réponse inattendue"; exit 1; }
+          done
+
+      - name: Nettoyage de la clé
+        if: always()
+        run: rm -f ~/.ssh/id_deploy

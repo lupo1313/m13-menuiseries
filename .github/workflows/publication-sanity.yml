@@ -1,0 +1,35 @@
+# Déclenché par le webhook Sanity (publication, modification ou suppression d'un contenu PUBLIÉ).
+# Anti-rafale : chaque nouveau déclenchement annule l'attente du précédent ; seul le dernier
+# déploie, 90 s après la dernière publication. Cible : variable CIBLE_AUTO (test par défaut).
+# Passer CIBLE_AUTO à « production » seulement après validation du site de test.
+name: Publication Sanity (automatique)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  attente:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: publication-sanity-attente
+      cancel-in-progress: true
+    outputs:
+      cible: ${{ steps.c.outputs.cible }}
+    steps:
+      - run: sleep 90
+      - id: c
+        env:
+          CIBLE_AUTO: ${{ vars.CIBLE_AUTO }}
+        run: |
+          case "${CIBLE_AUTO:-test}" in test|production) echo "cible=${CIBLE_AUTO:-test}" >> "$GITHUB_OUTPUT";; *) echo "::error::CIBLE_AUTO invalide"; exit 1;; esac
+
+  deployer:
+    needs: attente
+    uses: ./.github/workflows/_deployer.yml
+    with:
+      cible: ${{ needs.attente.outputs.cible }}
+      action: deployer
+    secrets: inherit

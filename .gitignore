@@ -27,3 +27,4 @@ studio/import/
 studio/prototype/
 studio/*.log
 dist-generated/
+dist-test/

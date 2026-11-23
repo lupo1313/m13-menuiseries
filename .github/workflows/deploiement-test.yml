@@ -1,0 +1,27 @@
+# Déploiement MANUEL sur le site de TEST (test.m13menuiseries.fr). Jamais la production.
+name: Déploiement TEST (manuel)
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Action
+        type: choice
+        options: [simulation, deployer, restaurer]
+        default: simulation
+      sauvegarde:
+        description: 'Pour « restaurer » : AAAAMMJJ-HHMMSS (vide = la plus récente)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    uses: ./.github/workflows/_deployer.yml
+    with:
+      cible: test
+      action: ${{ inputs.action }}
+      sauvegarde: ${{ inputs.sauvegarde }}
+    secrets: inherit

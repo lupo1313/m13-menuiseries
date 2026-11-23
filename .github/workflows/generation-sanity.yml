@@ -3,9 +3,7 @@
 name: Génération Sanity (sans déploiement)
 
 on:
-  workflow_dispatch: # lancement manuel depuis l'onglet Actions
-  repository_dispatch: # futur webhook Sanity
-    types: [sanity-publish]
+  workflow_dispatch: # lancement manuel depuis l'onglet Actions (le webhook utilise publication-sanity.yml)
 
 permissions:
   contents: read
